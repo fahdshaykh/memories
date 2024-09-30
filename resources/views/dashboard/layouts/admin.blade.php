@@ -91,6 +91,15 @@
               </ul>
             </li>
 
+            <li class="dropdown {{( (request()->is('galleries*')) ? 'active' : '' )}}">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                  data-feather="briefcase"></i><span>galleries</span></a>
+              <ul class="dropdown-menu">
+                <li class="{{( request()->is('galleries') ? 'active' : '' )}}"><a class="nav-link" href="{{ route('galleries.index') }}">Gallery list</a></li>
+                <li class="{{( request()->is('galleries/create') ? 'active' : '' )}}"><a class="nav-link" href="{{ route('galleries.create') }}">Create Gallery</a></li>
+              </ul>
+            </li>
+
           </ul>
         </aside>
       </div>

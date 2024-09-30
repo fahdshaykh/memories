@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\GalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,9 @@ Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/{slug?}', [WelcomeController::class, 'postDetail'])->name('welcome.show');
 Route::get('/category/{slug?}', [WelcomeController::class, 'welcome'])->name('category.posts');
 Route::get('/', [WelcomeController::class, 'search'])->name('search.posts');
+
+Route::get('/categories/all', [WelcomeController::class, 'categories'])->name('categories.user');
+Route::get('/categories/{slug?}', [WelcomeController::class, 'gallery'])->name('gallery.show');
 
 Route::view('/about-us', 'about')->name('about.index');
 
@@ -44,5 +48,7 @@ Route::prefix('admin')->group(function () {
     Route::get('category-status', [CategoryController::class, 'categoryStatus']);
     
     Route::resource('posts', PostController::class);
+
+    Route::resource('galleries', GalleryController::class);
 });
 // require __DIR__.'/auth.php';

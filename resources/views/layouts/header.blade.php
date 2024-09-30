@@ -2,7 +2,7 @@
     <div id="eskimo-sidebar-wrapper" class="d-flex align-items-start flex-column h-100 w-100">
         <!-- LOGO -->
         <div id="eskimo-logo-cell" class="w-100">
-            <a class="eskimo-logo-link" href="index.html">
+            <a class="eskimo-logo-link" href="{{ url('/') }}">
                 <img src="{{ asset('frontend/images/logo.png') }}" class="eskimo-logo" alt="eskimo" />
             </a>
         </div>
@@ -14,7 +14,7 @@
             <nav id="eskimo-main-menu" class="menu-main-menu-container">
                 <ul class="eskimo-menu-ul">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="other-features.html">Galleries</a></li>
+                    <li><a href="{{ route('categories.user') }}">Galleries</a></li>
                 </ul>
             </nav>
         </div>

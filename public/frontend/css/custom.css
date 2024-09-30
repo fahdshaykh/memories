@@ -30,3 +30,9 @@ button img {
 }
 
 /* quote button for copy text  */
+.featherlight img {
+  max-width: 100%;    /* Ensure the image width doesn't exceed the container */
+  max-height: 100vh;  /* Ensure the image height doesn't exceed the viewport height */
+  width: auto;        /* Keep the aspect ratio */
+  height: auto;
+}

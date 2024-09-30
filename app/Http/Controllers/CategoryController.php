@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
@@ -32,7 +33,19 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $category = Category::create($request->validated());
+        $data = $request->validated();
+
+        if($request->image){
+
+            $originalFile = $request->file('image');
+
+            $originalFile->move(public_path().'/category_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+
+            $data['image'] = $post_file;
+
+        }
+
+        $category = Category::create($data);
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully');
     }
@@ -58,7 +71,25 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category = $category->update($request->validated());
+        $data = $request->validated();
+        if($request->image){
+            
+            $document_path = public_path()."/category_images/".$category->image;  // Value is not URL but directory file path
+
+            if(File::exists($document_path)) {
+
+                File::delete($document_path);
+            }
+
+            $originalFile = $request->file('image');
+
+            $originalFile->move(public_path().'/category_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+
+            $data['image'] = $post_file;
+
+        }
+
+        $category = $category->update($data);
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully');
     }
@@ -68,6 +99,17 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if($category->image){
+            
+            $document_path = public_path()."/category_images/".$category->image;  // Value is not URL but directory file path
+
+            if(File::exists($document_path)) {
+
+                File::delete($document_path);
+            }
+
+        }
+
         $category = $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully');

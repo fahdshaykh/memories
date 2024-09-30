@@ -25,6 +25,7 @@ class StoreCategoryRequest extends FormRequest
             'title' => 'required|min:4|max:255',
             'slug' => 'required|string|max:255|unique:categories,slug', // Unique validation for the slug
             'content' => 'nullable',
+            'image' => 'nullable',
             'status' => '1',
         ];
     }
