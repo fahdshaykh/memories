@@ -22,18 +22,24 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        // View::share('categories', Category::withCount('posts')->where('status', '1')->get());
-        $categories = Category::withCount('posts')->where('status', '1')->get();
-        $latestPosts = Post::where('status', 'published')   
-                            ->orderBy('created_at', 'desc') 
-                            ->limit(10)                    
-                            ->get();
-    
-        View::share([
-            'categories' => $categories,
-            'latestPosts' => $latestPosts,  // Share the latest 10 posts
-        ]);
-        Schema::defaultStringLength(191);
-    }
+	{
+		if (Schema::hasTable('categories') && Schema::hasTable('posts')) {
+			$categories = Category::withCount('posts')
+				->where('status', '1')
+				->get();
+
+			$latestPosts = Post::where('status', 'published')
+				->orderBy('created_at', 'desc')
+				->limit(10)
+				->get();
+
+			View::share([
+				'categories'  => $categories,
+				'latestPosts' => $latestPosts,
+			]);
+		}
+
+		Schema::defaultStringLength(191);
+	}
+
 }
