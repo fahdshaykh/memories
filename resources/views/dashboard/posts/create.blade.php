@@ -44,7 +44,7 @@
 
                     <div class="form-group">
                         <label>Slug</label>
-                        <input type="text" name="slug" value="{{old('slug')}}" placeholder="wish-me-slug" class="form-control" required="">
+                        <input type="text" name="slug" value="{{old('slug')}}" placeholder="wish-me-slug" class="form-control">
                         @error('slug')
                         <div class="invalid-message">
                             {{ $errors->first('slug') }}
@@ -57,7 +57,12 @@
                         <textarea class="form-control summernote" name="content"></textarea>
                     </div>
 
-                    
+                    <div>
+                        <label>Tags (comma separated)</label>
+                        <input class="form-control" type="text" name="tags" value="{{ old('tags') }}" 
+                            placeholder="life, war, style" class="w-full">
+                        <small>Separate tags with commas</small>
+                    </div>
 
                     <div class="col-md-12" id="editor-container">
 

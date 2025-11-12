@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePostRequest extends FormRequest
 {
@@ -22,11 +23,19 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id'   => 'required',
-            'title' => 'required|min:10|max:255',
-            'slug' => 'required|string|max:255|unique:posts,slug', // Unique validation for the slug
-            'content' => 'nullable',
-            'image' => 'nullable'
+            'title'       => 'required|string|max:255',
+            'slug'        => [
+                'nullable',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z0-9\-]+$/',
+                Rule::unique('posts', 'slug'), // SIRF YEHI — KOI DELETED_AT NAHI!
+            ],
+            'content'     => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5048',
+            'tags'        => 'nullable|string',
+            'quote.*'     => 'nullable|string',
         ];
     }
 }

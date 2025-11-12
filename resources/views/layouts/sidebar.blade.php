@@ -29,6 +29,14 @@
                 </ul>
             </div>
             <!-- TAGS -->
+            <div class="eskimo-widget">
+                <h5 class="eskimo-title-with-border"><span>Tags</span></h5>
+                <div class="eskimo-tag-cloud">
+                    @foreach($popularTags as $tag)
+                    <a href="{{ route('tags.show', $tag->slug) }}">{{ $tag->name }}<span>{{ $tag->posts_count }}</span></a>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </aside>
 </div>

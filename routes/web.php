@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,15 @@ use App\Http\Controllers\GalleryController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
-Route::get('/{slug?}', [WelcomeController::class, 'postDetail'])->name('welcome.show');
-Route::get('/category/{slug?}', [WelcomeController::class, 'welcome'])->name('category.posts');
 Route::get('/', [WelcomeController::class, 'search'])->name('search.posts');
+Route::get('/tags/{tag}', [TagController::class, 'show'])->name('tags.show');
 
+Route::get('/{slug?}', [WelcomeController::class, 'postDetail'])->name('welcome.show');
+Route::get('/category/{slug?}', [WelcomeController::class, 'categoryPosts'])->name('category.posts');
+
+//this is gallery module sectio
 Route::get('/categories/all', [WelcomeController::class, 'categories'])->name('categories.user');
 Route::get('/categories/{slug?}', [WelcomeController::class, 'gallery'])->name('gallery.show');
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('more_content')->nullable();
             $table->string('image')->nullable();
             $table->string('status')->default('published');
+            $table->dateTime('published_at')->nullable();
             $table->timestamps();
         });
     }

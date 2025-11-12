@@ -6,18 +6,34 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Tags\HasTags;
+use Spatie\Tags\Tag;
 
 class Post extends Model
 {
     use HasFactory;
+    use HasTags;
 
     protected $fillable = [
         'category_id',
         'title',
         'slug',
         'content',
-        'image'
+        'image',
+        'published_at'
     ];
+    
+    // Optional: customize tag type (useful if you have multiple tag types)
+    public static function getTagClassName(): string
+    {
+        return Tag::class;
+    }
+    
+    // Optional: scope to get published posts
+    public function scopePublished($query)
+    {
+        return $query->whereNotNull('published_at');
+    }
 
     public function category()
     {

@@ -14,7 +14,7 @@
             By <a class="author-meta" href="author.html">Egemenerd</a>
         </div> --}}
         <div class="eskimo-cat-meta">
-            In <a href="category.html">{{ $post->category->title }}</a>
+            In <a href="{{ route('category.posts', $post->category->slug) }}">{{ $post->category->title }}</a>
         </div>
         <div class="">{{ $post->created_at->diffForHumans(); }}</div>
     </div>
@@ -56,6 +56,13 @@
                 
     @endforeach
 
+    
+    <!-- TAGS -->
+    <div class="eskimo-meta-tags">
+        @foreach($post->tags as $tag)
+        <span class="badge badge-default"><a href="{{ route('tags.show', $tag->slug) }}">{{ $tag->name }}</a></span>
+        @endforeach
+    </div>
     <!-- IMAGE GALLERY -->
     
     <div class="clearfix"></div>

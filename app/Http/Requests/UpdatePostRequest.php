@@ -23,16 +23,19 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id'   => 'required',
-            'title' => 'required|min:10|max:255',
-            'slug' => [
-                'required',
+            'title'       => 'required|string|max:255',
+            'slug'        => [
+                'nullable',
                 'string',
                 'max:255',
-                Rule::unique('posts', 'slug')->ignore($this->route('post')), // Unique validation with exclusion
+                'regex:/^[a-zA-Z0-9\-]+$/',
+                Rule::unique('posts', 'slug')->ignore($this->route('post')->id), // SIRF ID IGNORE
             ],
-            'content' => 'nullable',
-            'image' => 'nullable'
+            'content'     => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5048',
+            'tags'        => 'nullable|string',
+            'quote.*'     => 'nullable|string',
         ];
     }
 }

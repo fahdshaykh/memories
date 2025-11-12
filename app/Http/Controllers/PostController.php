@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -50,10 +51,35 @@ class PostController extends Controller
 
         $post->category_id = $request->category_id;
         $post->title = $request->title;
-        $post->slug = $request->slug;
+        // $post->slug = $request->slug;
         $post->content = $request->content;
+        $post->published_at = now(); //$request->published_at ? now() : null;
+        // $post->save();
+
+        // SLUG LOGIC — SAME AS STORE
+        $slug = $request->filled('slug') 
+            ? Str::slug($request->slug, '-') 
+            : Str::slug($request->title, '-');
+
+        $baseSlug = $slug;
+        $count = 1;
+        while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
+            $slug = $baseSlug . '-' . $count;
+            $count++;
+        }
+
+        $post->slug = $slug;
+
         $post->save();
 
+        // TAGS
+        if ($request->filled('tags')) {
+            $tagNames = array_filter(array_map('trim', explode(',', $request->tags)));
+            $tagNames = array_map(fn($tag) => preg_match('/[\x{0600}-\x{06FF}]/u', $tag) ? $tag : strtolower($tag), $tagNames);
+            $post->syncTags($tagNames);
+        } else {
+            $post->detachTags($post->tags);
+        }
         
         if($request->quote) {
 
@@ -93,10 +119,13 @@ class PostController extends Controller
                    ->orderBy('order', 'asc')
                    ->get();
 
+        $existingTags = $post->tags->pluck('name')->implode(', ');
+
         return view('dashboard.posts.edit', [
             'post' => $post,
             'quotes' => $quotes,
-            'categories' => $categories
+            'categories' => $categories,
+            'existingTags' => $existingTags,
         ]);
     }
 
@@ -124,11 +153,33 @@ class PostController extends Controller
 
         $post->category_id = $request->category_id;
         $post->title = $request->title;
-        $post->slug = $request->slug;
         $post->content = $request->content;
+        $post->published_at = now(); //$request->published ? now() : null;
+
+        // SLUG LOGIC — SAME AS STORE
+        $slug = $request->filled('slug') 
+            ? Str::slug($request->slug, '-') 
+            : Str::slug($request->title, '-');
+
+        $baseSlug = $slug;
+        $count = 1;
+        while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
+            $slug = $baseSlug . '-' . $count;
+            $count++;
+        }
+
+        $post->slug = $slug;
+
         $post->save();
 
-        
+        // TAGS
+        if ($request->filled('tags')) {
+            $tagNames = array_filter(array_map('trim', explode(',', $request->tags)));
+            $tagNames = array_map(fn($tag) => preg_match('/[\x{0600}-\x{06FF}]/u', $tag) ? $tag : strtolower($tag), $tagNames);
+            $post->syncTags($tagNames);
+        } else {
+            $post->detachTags($post->tags);
+        }
 
         Quote::where('post_id', $post->id)->delete();
 

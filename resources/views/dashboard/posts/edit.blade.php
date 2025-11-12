@@ -40,12 +40,25 @@
 
                     <div class="form-group">
                         <label>Slug</label>
-                        <input type="text" name="slug" value="{{old('slug', $post->slug)}}" placeholder="wish-me-slug" class="form-control" required="">
+                        <input type="text" name="slug" value="{{old('slug', $post->slug)}}" placeholder="wish-me-slug" class="form-control">
                         @error('slug')
                         <div class="invalid-message">
                             {{ $errors->first('slug') }}
                         </div>
                         @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="tags" class="block text-sm font-medium text-gray-700">Tags (comma separated)</label>
+                        <input 
+                            class="form-control mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" 
+                            type="text" 
+                            name="tags" 
+                            id="tags"
+                            value="{{ old('tags', $existingTags ?? '') }}" 
+                            placeholder="life, war, style"
+                        >
+                        <small>Separate tags with commas</small>
                     </div>
 
                     <div class="form-group mb-2">

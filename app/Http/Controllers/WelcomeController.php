@@ -12,14 +12,18 @@ class WelcomeController extends Controller
 {
     public function welcome($slug = null)
     {
-        if($slug){
-            $category = Category::where('slug', $slug)->first();
-            $posts = Post::latest()->where('category_id', $category->id)->paginate(10);
-        } else {
-            $posts = Post::latest()->paginate(10);
-        }
+        $posts = Post::latest()->paginate(10);
 
         return view('welcome', compact('posts'));
+    }
+
+    public function categoryPosts($slug = null)
+    {
+
+        $category = Category::where('slug', $slug)->first();
+        $posts = Post::latest()->where('category_id', $category->id)->paginate(10);
+
+        return view('posts.category_posts', compact('posts'));
     }
 
     public function postDetail($slug)
@@ -30,7 +34,7 @@ class WelcomeController extends Controller
                    ->orderBy('order', 'asc')
                    ->get();
 
-        return view('post', compact('post','quotes'));
+        return view('posts.post', compact('post','quotes'));
     }
 
     public function search(Request $request)
@@ -51,7 +55,7 @@ class WelcomeController extends Controller
 
     public function categories()
     {
-        return view('categories');
+        return view('galleries.categories');
     }
 
     public function gallery($slug)
@@ -60,7 +64,7 @@ class WelcomeController extends Controller
 
         $galleries = Gallery::where('category_id', $category->id)->latest()->paginate(10);;
 
-        return view('galleries', compact('galleries', 'category'));
+        return view('galleries.galleries', compact('galleries', 'category'));
     }
 
 }
