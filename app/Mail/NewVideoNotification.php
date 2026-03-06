@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Video;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,14 +14,16 @@ class NewVideoNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $video;
+    public $subscriber;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Video $video)
+    public function __construct(Video $video, $subscriber = null)
     {
         // Refresh the model to get all fields including timestamps
         $this->video = $video;
+        $this->subscriber = $subscriber;
     }
 
     /**

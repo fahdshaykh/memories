@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Post;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,14 +14,16 @@ class NewPostNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $post;
+    public $subscriber;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Post $post)
+    public function __construct(Post $post, $subscriber = null)
     {
         // Refresh the model to get all fields including timestamps
         $this->post = $post;
+        $this->subscriber = $subscriber;
     }
 
     /**

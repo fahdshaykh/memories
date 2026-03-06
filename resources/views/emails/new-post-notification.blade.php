@@ -90,7 +90,7 @@
         </div>
 
         <div class="footer">
-            <p>If you no longer wish to receive these emails, <a href="{{ route('unsubscribe', 'your-token-here') }}">click here to unsubscribe</a>.</p>
+            <p>If you no longer wish to receive these emails, <a href="{{ route('unsubscribe', $subscriber ? $subscriber->verification_token : 'your-token-here') }}">click here to unsubscribe</a>.</p>
             <p>&copy; {{ date('Y') }} Wisherpro. All rights reserved.</p>
         </div>
     </div>

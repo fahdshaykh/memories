@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Gallery;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,14 +14,16 @@ class NewGalleryNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $gallery;
+    public $subscriber;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Gallery $gallery)
+    public function __construct(Gallery $gallery, $subscriber = null)
     {
         // Refresh the model to get all fields including timestamps
         $this->gallery = $gallery;
+        $this->subscriber = $subscriber;
     }
 
     /**

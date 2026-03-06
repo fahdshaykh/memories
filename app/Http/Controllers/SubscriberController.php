@@ -7,9 +7,7 @@ use App\Http\Requests\StoreSubscriberRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubscriptionConfirmation;
-use App\Mail\NewPostNotification;
-use App\Mail\NewVideoNotification;
-use App\Mail\NewGalleryNotification;
+use App\Jobs\SendNewsletterJob;
 
 class SubscriberController extends Controller
 {
@@ -28,7 +26,7 @@ class SubscriberController extends Controller
                     'verification_token' => md5($request->email . time()),
                 ]);
 
-                // Send confirmation email
+                // Send confirmation email immediately (not queued)
                 Mail::to($subscriber->email)->send(new SubscriptionConfirmation($subscriber));
 
                 return response()->json([
@@ -51,7 +49,7 @@ class SubscriberController extends Controller
             'verification_token' => md5($request->email . time()),
         ]);
 
-        // Send confirmation email
+        // Send confirmation email immediately (not queued)
         Mail::to($subscriber->email)->send(new SubscriptionConfirmation($subscriber));
 
         return redirect()->back()->with('success', 'Thank you for subscribing! You will receive updates about new posts and videos.');
@@ -74,25 +72,11 @@ class SubscriberController extends Controller
     }
 
     /**
-     * Send newsletter to all active subscribers.
+     * Send newsletter to all active subscribers via queue job.
      */
     public function sendNewsletter($content, $type)
     {
-        $subscribers = Subscriber::where('is_active', true)->where('is_verified', true)->get();
-
-        foreach ($subscribers as $subscriber) {
-            try {
-                if ($type === 'post') {
-                    Mail::to($subscriber->email)->send(new NewPostNotification($content));
-                } elseif ($type === 'video') {
-                    Mail::to($subscriber->email)->send(new NewVideoNotification($content));
-                } elseif ($type === 'gallery') {
-                    Mail::to($subscriber->email)->send(new NewGalleryNotification($content));
-                }
-            } catch (\Exception $e) {
-                // Continue with next subscriber even if one fails
-                \Log::error('Failed to send newsletter to ' . $subscriber->email . ': ' . $e->getMessage());
-            }
-        }
+        // Dispatch the job to the queue
+        dispatch(new SendNewsletterJob($content, $type));
     }
 }
