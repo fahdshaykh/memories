@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGalleryRequest extends FormRequest
+class StoreVideoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class StoreGalleryRequest extends FormRequest
         return [
             'category_id'   => 'required',
             'title' => 'required|min:4|max:255',
-            'slug' => 'required|string|max:255|unique:galleries,slug', // Unique validation for the slug
+            'slug' => 'required|string|max:255|unique:videos,slug', // Unique validation for the slug
             'content' => 'nullable',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => '1',
+            'video_file' => 'required|mimes:mp4,avi,mov,mkv,wmv,flv|max:102400',
         ];
     }
 }

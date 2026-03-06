@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\VideoController;
 use App\Http\Controllers\TagController;
 
 /*
@@ -33,6 +34,9 @@ Route::get('/category/{slug?}', [WelcomeController::class, 'categoryPosts'])->na
 Route::get('/categories/all', [WelcomeController::class, 'categories'])->name('categories.user');
 Route::get('/categories/{slug?}', [WelcomeController::class, 'gallery'])->name('gallery.show');
 
+Route::get('/videos/all', [WelcomeController::class, 'videos'])->name('videos.user');
+Route::get('/videos/{slug?}', [WelcomeController::class, 'video'])->name('video.show');
+
 Route::view('/about-us', 'about')->name('about.index');
 
 Route::prefix('admin')->group(function () {
@@ -53,5 +57,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('posts', PostController::class);
 
     Route::resource('galleries', GalleryController::class);
+
+    Route::resource('videos', VideoController::class);
 });
 // require __DIR__.'/auth.php';

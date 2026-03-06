@@ -10,6 +10,8 @@ use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -39,64 +41,58 @@ class PostController extends Controller
     {
         $post = new Post();
 
-        if($request->image){
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.webp';
 
-            $originalFile = $request->file('image');
+            // Intervention se process
+            $img = Image::make($image->getRealPath());
+            // $img->resize(1200, 700, function ($constraint) {
+            //     $constraint->aspectRatio();
+            //     $constraint->upsize();
+            // })->crop(1200, 700);
+            $img->encode('webp', 90);
 
-            $originalFile->move(public_path().'/post_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+            // Storage mein save karo
+            $path = 'post_images/' . $filename;
+            Storage::disk('public')->put($path, $img->stream()->__toString());
 
-            $post->image = $post_file;
-
+            $post->image = $path; // DB mein path save
         }
 
+        // Baki sab same...
         $post->category_id = $request->category_id;
-        $post->title = $request->title;
-        // $post->slug = $request->slug;
-        $post->content = $request->content;
-        $post->published_at = now(); //$request->published_at ? now() : null;
-        // $post->save();
+        $post->title       = $request->title;
+        $post->content     = $request->content;
+        $post->published_at = now();
 
-        // SLUG LOGIC — SAME AS STORE
-        $slug = $request->filled('slug') 
-            ? Str::slug($request->slug, '-') 
-            : Str::slug($request->title, '-');
-
+        // Slug logic...
+        $slug = $request->filled('slug') ? Str::slug($request->slug, '-') : Str::slug($request->title, '-');
         $baseSlug = $slug;
         $count = 1;
-        while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
-            $slug = $baseSlug . '-' . $count;
-            $count++;
+        while (Post::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $count++;
         }
-
         $post->slug = $slug;
 
         $post->save();
 
-        // TAGS
+        // Tags + Quotes same...
         if ($request->filled('tags')) {
             $tagNames = array_filter(array_map('trim', explode(',', $request->tags)));
             $tagNames = array_map(fn($tag) => preg_match('/[\x{0600}-\x{06FF}]/u', $tag) ? $tag : strtolower($tag), $tagNames);
             $post->syncTags($tagNames);
-        } else {
-            $post->detachTags($post->tags);
         }
-        
-        if($request->quote) {
 
-            foreach($request->quote as $key=>$quote) {
-
-                $quote_id = Quote::create([
-                    'post_id' => $post->id,
-                    'quote' => $quote,
-                    'order' => $key
-                ]);
-
+        if ($request->quote && is_array($request->quote)) {
+            foreach ($request->quote as $key => $quote) {
+                if (!empty(trim($quote))) {
+                    Quote::create(['post_id' => $post->id, 'quote' => $quote, 'order' => $key]);
+                }
             }
-            
         }
 
-        session()->flash('status', 'New post was created!');
-
+        session()->flash('status', 'پوسٹ کامیابی سے بن گئی!');
         return redirect()->route('posts.index');
     }
 
@@ -134,45 +130,42 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        if($request->image){
-            
-            $document_path = public_path()."/post_images/".$post->image;  // Value is not URL but directory file path
-
-            if(File::exists($document_path)) {
-
-                File::delete($document_path);
+        if ($request->hasFile('image')) {
+            // Purani image delete
+            if ($post->image && Storage::disk('public')->exists($post->image)) {
+                Storage::disk('public')->delete($post->image);
             }
 
-            $originalFile = $request->file('image');
+            $image = $request->file('image');
+            $filename = time() . '.webp';
 
-            $originalFile->move(public_path().'/post_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+            $img = Image::make($image->getRealPath());
+            // $img->resize(1200, 700, fn($c) => $c->aspectRatio()->upsize())->crop(1200, 700);
+            $img->encode('webp', 90);
 
-            $post->image = $post_file;
+            $path = 'post_images/' . $filename;
+            Storage::disk('public')->put($path, $img->stream()->__toString());
 
+            $post->image = $path;
         }
 
+        // Baki sab same...
         $post->category_id = $request->category_id;
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->published_at = now(); //$request->published ? now() : null;
+        $post->title       = $request->title;
+        $post->content     = $request->content;
+        $post->published_at = now();
 
-        // SLUG LOGIC — SAME AS STORE
-        $slug = $request->filled('slug') 
-            ? Str::slug($request->slug, '-') 
-            : Str::slug($request->title, '-');
-
+        $slug = $request->filled('slug') ? Str::slug($request->slug, '-') : Str::slug($request->title, '-');
         $baseSlug = $slug;
         $count = 1;
         while (Post::where('slug', $slug)->where('id', '!=', $post->id)->exists()) {
-            $slug = $baseSlug . '-' . $count;
-            $count++;
+            $slug = $baseSlug . '-' . $count++;
         }
-
         $post->slug = $slug;
 
         $post->save();
 
-        // TAGS
+        // Tags + Quotes same...
         if ($request->filled('tags')) {
             $tagNames = array_filter(array_map('trim', explode(',', $request->tags)));
             $tagNames = array_map(fn($tag) => preg_match('/[\x{0600}-\x{06FF}]/u', $tag) ? $tag : strtolower($tag), $tagNames);
@@ -182,25 +175,15 @@ class PostController extends Controller
         }
 
         Quote::where('post_id', $post->id)->delete();
-
-        if($request->quote) {
-
-            foreach($request->quote as $key => $quote) {
-
-                Quote::create([
-                    'quote' => $quote,
-                    'post_id' => $post->id,
-                    'order' => $key
-                ]);
-
+        if ($request->quote && is_array($request->quote)) {
+            foreach ($request->quote as $key => $quote) {
+                if (!empty(trim($quote))) {
+                    Quote::create(['post_id' => $post->id, 'quote' => $quote, 'order' => $key]);
+                }
             }
-            
         }
 
-
-
-        session()->flash('success', 'New post was Updated!');
-
+        session()->flash('success', 'پوسٹ اپ ڈیٹ ہو گئی!');
         return redirect()->route('posts.index');
     }
 
@@ -209,18 +192,12 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        // Storage::delete($post->image);
-        $image_path = public_path()."/post_images/".$post->image;  // Value is not URL but directory file path
-
-        if(File::exists($image_path)) {
-
-            File::delete($image_path);
+        if ($post->image && Storage::disk('public')->exists($post->image)) {
+            Storage::disk('public')->delete($post->image);
         }
-
         $post->delete();
 
-        session()->flash('success', 'New post was Deleted!');
-
+        session()->flash('success', 'پوسٹ ڈیلیٹ ہو گئی!');
         return redirect()->route('posts.index');
     }
 }

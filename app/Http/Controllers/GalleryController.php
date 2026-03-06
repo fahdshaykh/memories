@@ -9,6 +9,7 @@ use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
@@ -27,7 +28,9 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        return view('dashboard.galleries.create');
+        $categories = Category::latest()->get();
+
+        return view('dashboard.galleries.create', compact('categories'));
     }
 
     /**
@@ -37,19 +40,23 @@ class GalleryController extends Controller
     {
         $data = $request->validated();
 
-        if($request->image){
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.webp';
 
-            $originalFile = $request->file('image');
+            $img = Image::make($image->getRealPath());
+            // $img->resize(1200, 700, fn($c) => $c->aspectRatio()->upsize())->crop(1200, 700);
+            $img->encode('webp', 90);
 
-            $originalFile->move(public_path().'/gallery_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+            $path = 'gallery_images/' . $filename;
+            Storage::disk('public')->put($path, $img->stream()->__toString());
 
-            $data['image'] = $post_file;
-
+            $data['image'] = $path;
         }
 
-        $gallery = Gallery::create($data);
+        Gallery::create($data);
 
-        return redirect()->route('galleries.index')->with('success', 'gallery created successfully');
+        return redirect()->route('galleries.index')->with('success', 'گیلری آئٹم بن گیا!');
     }
 
     /**
@@ -74,48 +81,42 @@ class GalleryController extends Controller
     public function update(UpdateGalleryRequest $request, Gallery $gallery)
     {
         $data = $request->validated();
-        if($request->image){
-            
-            $document_path = public_path()."/gallery_images/".$gallery->image;  // Value is not URL but directory file path
 
-            if(File::exists($document_path)) {
-
-                File::delete($document_path);
+        if ($request->hasFile('image')) {
+            if ($gallery->image && Storage::disk('public')->exists($gallery->image)) {
+                Storage::disk('public')->delete($gallery->image);
             }
 
-            $originalFile = $request->file('image');
+            $image = $request->file('image');
+            $filename = time() . '.webp';
 
-            $originalFile->move(public_path().'/gallery_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+            $img = Image::make($image->getRealPath());
+            // $img->resize(1200, 700, fn($c) => $c->aspectRatio()->upsize())->crop(1200, 700);
+            $img->encode('webp', 90);
 
-            $data['image'] = $post_file;
+            $path = 'gallery_images/' . $filename;
+            Storage::disk('public')->put($path, $img->stream()->__toString());
 
+            $data['image'] = $path;
         }
 
-        // dd($data);
-        $gallery = $gallery->update($data);
+        $gallery->update($data);
 
-        return redirect()->route('galleries.index')->with('success', 'gallery updated successfully');
+        return redirect()->route('galleries.index')->with('success', 'گیلری اپ ڈیٹ ہو گئی!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(Gallery $gallery)
     {
-        if($gallery->image){
-            
-            $document_path = public_path()."/gallery_images/".$gallery->image;  // Value is not URL but directory file path
-
-            if(File::exists($document_path)) {
-
-                File::delete($document_path);
-            }
-
+        if ($gallery->image && Storage::disk('public')->exists($gallery->image)) {
+            Storage::disk('public')->delete($gallery->image);
         }
+        $gallery->delete();
 
-        $gallery = $gallery->delete();
-
-        return redirect()->route('galleries.index')->with('success', 'gallery deleted successfully');
+        return redirect()->route('galleries.index')->with('success', 'گیلری ڈیلیٹ ہو گئی!');
     }
 
 

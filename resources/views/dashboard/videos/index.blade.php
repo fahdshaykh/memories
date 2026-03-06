@@ -29,7 +29,7 @@
                     </thead>
                     <tbody>
                         <?php $serial = 1; ?>
-                    @foreach($galleries as $row)
+                    @foreach($videos as $row)
                         <tr>
                             <td>{{$serial}}</td>
                             <td>{{$row->title}}</td>
@@ -41,10 +41,10 @@
                             <td>
                             <div class="btn-group align-top">
                                 
-                                <button class="btn btn-default"><a href="{{ route('galleries.edit', ['gallery' => $row->id]) }}"><i class="fas fa-pen" style="font-size:15px;"></i></a></button>
+                                <button class="btn btn-default"><a href="{{ route('videos.edit', ['video' => $row->id]) }}"><i class="fas fa-pen" style="font-size:15px;"></i></a></button>
                             
                             
-                                <form method="post" action="{{ route('galleries.destroy', ['gallery' => $row->id]) }}" class="user-delete-btn"
+                                <form method="post" action="{{ route('videos.destroy', ['video' => $row->id]) }}" class="user-delete-btn"
                                 onsubmit="return confirm('Are You Sure Want To Delete?');">
                                 @method('DELETE')
                                 @csrf

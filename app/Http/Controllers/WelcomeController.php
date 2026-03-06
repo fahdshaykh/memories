@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\Quote;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
 class WelcomeController extends Controller
@@ -55,7 +56,8 @@ class WelcomeController extends Controller
 
     public function categories()
     {
-        return view('galleries.categories');
+        $categories = Category::latest()->get();
+        return view('galleries.categories', compact('categories'));
     }
 
     public function gallery($slug)
@@ -65,6 +67,21 @@ class WelcomeController extends Controller
         $galleries = Gallery::where('category_id', $category->id)->latest()->paginate(10);;
 
         return view('galleries.galleries', compact('galleries', 'category'));
+    }
+
+    public function videos()
+    {
+        $categories = Category::latest()->get();
+
+        return view('videos.videos', compact('categories'));
+    }
+
+    public function video($slug)
+    {
+        $category = Category::where('slug', $slug)->first();
+        $videos = Video::where('category_id', $category->id)->latest()->paginate(10);
+
+        return view('videos.video', compact('videos', 'category'));
     }
 
 }

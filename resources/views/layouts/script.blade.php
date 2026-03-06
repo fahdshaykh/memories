@@ -5,5 +5,6 @@
 <script src="{{ asset('frontend/js/panel.js') }}"></script>
 <script src="{{ asset('frontend/js/reading-position-indicator.js') }}"></script>
 <script src="{{ asset('frontend/js/rrssb.min.js') }}"></script>
-<script src="{{ asset('frontend/js/featherlight.js') }}"></script>
+<!-- <script src="{{ asset('frontend/js/featherlight.js') }}"></script> -->
+ <!-- <script src="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.gallery.min.js"></script> -->
 <script src="{{ asset('frontend/js/custom.js') }}"></script>

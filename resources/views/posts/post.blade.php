@@ -21,7 +21,7 @@
 </div>
 <!-- FEATURED IMAGE -->
 <div class="eskimo-featured-img">
-    <img src="{{ asset('post_images').'/'.$post->image }}" alt="{{ $post->slug }}" />
+    <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('default.png') }}" alt="{{ $post->slug }}" />
 </div>
 <!-- POST CONTENT -->
 <div class="eskimo-page-content">

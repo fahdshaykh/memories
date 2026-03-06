@@ -8,7 +8,7 @@
 <!-- PAGE TITLE -->
 
 <div class="eskimo-page-title">
-    <h1 class="no-border">Welcome Memories Quotes</h1>
+    <h1 class="no-border">{{ $posts['0']->category->title }} Quotes</h1>
 </div>
 <!-- BLOG POSTS -->
 <div class="eskimo-masonry-grid">
@@ -18,7 +18,7 @@
         <div class="card-masonry">
             <div class="card">
                 <a href="{{ route('welcome.show', $post->slug) }}">
-                    <img class="card-vertical-img" src="{{ asset('post_images').'/'.$post->image }}" alt="{{ $post->slug }}" />   
+                    <img class="card-vertical-img" src="{{ $post->image ? asset('storage/' . $post->image) : asset('default.png') }}" alt="{{ $post->slug }}" />   
                 </a>
                 <div class="card-border">
                     <div class="card-body">

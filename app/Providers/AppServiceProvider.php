@@ -28,11 +28,13 @@ class AppServiceProvider extends ServiceProvider
 		if (Schema::hasTable('categories') && Schema::hasTable('posts')) {
 			$categories = Category::withCount('posts')
 				->where('status', '1')
-				->limit(10)
+                ->latest()
+				->limit(5)
 				->get();
 
 			$latestPosts = Post::where('status', 'published')
 				->orderBy('created_at', 'desc')
+                ->latest()
 				->limit(5)
 				->get();
 
@@ -47,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
             ->where('posts.status', '=', 'published')
             ->groupBy('tags.id')
             ->orderByDesc('posts_count')
+            ->latest()
             ->limit(20)
             ->get();
 

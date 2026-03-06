@@ -18,7 +18,7 @@
         <div class="card-masonry">
             <div class="card">
                 <a href="{{ route('welcome.show', $post->slug) }}">
-                    <img class="card-vertical-img" src="{{ asset('post_images').'/'.$post->image }}" alt="{{ $post->slug }}" />   
+                    <img class="card-vertical-img" src="{{ $post->image ? asset('storage/' . $post->image) : asset('default.png') }}" alt="{{ $post->slug }}" />   
                 </a>
                 <div class="card-border">
                     <div class="card-body">

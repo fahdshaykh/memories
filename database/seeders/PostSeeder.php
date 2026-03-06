@@ -18,7 +18,7 @@ class PostSeeder extends Seeder
 
         \App\Models\Post::factory($posts_count)->make()->each(function($post) use($categories) {
             $post->category_id = $categories->random()->id;
-            $post->image = 'img-01.jpg';
+            $post->published_at = now();
             $post->save();
         }); 
     }
