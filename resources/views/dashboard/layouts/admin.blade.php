@@ -132,6 +132,16 @@
                 </li>
               </ul>
             </li>
+
+            <!-- Contacts -->
+            <li class="{{ request()->is('admin/contacts*') ? 'active' : '' }}">
+              <a href="{{ route('contacts.index') }}" class="nav-link">
+                <i data-feather="mail"></i><span>Contacts</span>
+                @if(\App\Models\Contact::where('is_read', false)->count() > 0)
+                  <span class="badge badge-warning">{{ \App\Models\Contact::where('is_read', false)->count() }}</span>
+                @endif
+              </a>
+            </li>
           </ul>
         </aside>
       </div>

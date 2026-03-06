@@ -7,7 +7,11 @@ use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\Quote;
 use App\Models\Video;
+use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\ContactNotification;
 
 class WelcomeController extends Controller
 {
@@ -111,15 +115,23 @@ class WelcomeController extends Controller
 
     public function submitContact(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|min:10',
         ]);
 
-        // Here you can add code to send email or save to database
-        // For now, just redirect with success message
+        // Save to database
+        $contact = Contact::create($validated);
+
+        // Send email notification
+        try {
+            Mail::to('support@wisherpro.com')->send(new ContactNotification($contact));
+        } catch (\Exception $e) {
+            // Log error but don't fail the submission
+            Log::error('Failed to send contact email: ' . $e->getMessage());
+        }
 
         return redirect()->route('contact')->with('success', 'Thank you for your message! We will get back to you within 24-48 hours.');
     }

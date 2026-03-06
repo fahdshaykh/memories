@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,11 @@ Route::prefix('admin')->group(function () {
     Route::resource('galleries', GalleryController::class);
 
     Route::resource('videos', VideoController::class);
+
+    // Contact Routes
+    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+    Route::put('contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contacts.mark-read');
+    Route::put('contacts/{contact}/mark-unread', [ContactController::class, 'markAsUnread'])->name('contacts.mark-unread');
 });
 // require __DIR__.'/auth.php';
 
