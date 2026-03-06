@@ -61,3 +61,14 @@ Route::prefix('admin')->group(function () {
     Route::resource('videos', VideoController::class);
 });
 // require __DIR__.'/auth.php';
+
+use App\Http\Controllers\SubscriberController;
+
+/*
+|--------------------------------------------------------------------------
+| Newsletter Routes
+|--------------------------------------------------------------------------
+*/
+Route::post('/subscribe', [SubscriberController::class, 'subscribe'])->name('subscribe');
+Route::get('/unsubscribe/{token}', [SubscriberController::class, 'unsubscribe'])->name('unsubscribe');
+

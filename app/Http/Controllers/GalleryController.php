@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\SubscriberController;
 
 class GalleryController extends Controller
 {
@@ -56,9 +57,18 @@ class GalleryController extends Controller
             $data['image'] = $path;
         }
 
-        Gallery::create($data);
+        $gallery = Gallery::create($data);
 
-        return redirect()->route('galleries.index')->with('success', 'گیلری آئٹم بن گیا!');
+        // Send newsletter to subscribers
+        try {
+            $subscriberController = new SubscriberController();
+            $subscriberController->sendNewsletter($gallery, 'gallery');
+        } catch (\Exception $e) {
+            // Log error but don't fail the gallery creation
+            \Log::error('Newsletter send failed: ' . $e->getMessage());
+        }
+
+        return redirect()->route('galleries.index')->with('success','Gallery image created successfully');
     }
 
     /**
@@ -106,7 +116,7 @@ class GalleryController extends Controller
 
         $gallery->update($data);
 
-        return redirect()->route('galleries.index')->with('success', 'گیلری اپ ڈیٹ ہو گئی!');
+        return redirect()->route('galleries.index')->with('success', 'Gallery image updated successfully');
     }
 
     /**
@@ -120,7 +130,7 @@ class GalleryController extends Controller
         }
         $gallery->delete();
 
-        return redirect()->route('galleries.index')->with('success', 'گیلری ڈیلیٹ ہو گئی!');
+        return redirect()->route('galleries.index')->with('success', 'Gallery image deleted successfully');
     }
 
 

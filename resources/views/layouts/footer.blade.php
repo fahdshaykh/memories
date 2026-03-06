@@ -5,19 +5,39 @@
           <div class="col-12 col-lg-6 mb-4 mb-lg-0">
               <h5 class="eskimo-title-with-border"><span>About Me</span></h5>
               <p>Trusted by thousands of customers, my unique themes and plugins help you make beautiful responsive web sites with ease.</p>
-              <p><a href="about.html" class="btn btn-default">Read More</a></p>
+              <p><a href="{{ url('about') }}" class="btn btn-default">Read More</a></p>
           </div>
           <!-- FOOTER WIDGET 2 -->
           <div class="col-12 col-lg-6">
               <h5 class="eskimo-title-with-border"><span>Newsletter</span></h5>
-              <form method="post" action="index.html">
+              <form method="post" action="{{ route('subscribe') }}">
+                  @csrf
                   <label>Subscribe to our mailing list!</label>
                   <div class="input-group">
-                      <input type="email" class="form-control" name="EMAIL" placeholder="Your email address" required />
-                      <div class="input-group-append"> 
-                          <input type="submit" value="Sign up"  class="btn btn-default" />
+                      <input type="email" class="form-control" name="email" placeholder="Your email address" required />
+                      <div class="input-group-append">
+                          <input type="submit" value="Sign up" class="btn btn-default" />
                       </div>
                   </div>
+                  @if(session('success'))
+                      <div class="alert alert-success mt-2">
+                          {{ session('success') }}
+                      </div>
+                  @endif
+                  @if(session('error'))
+                      <div class="alert alert-danger mt-2">
+                          {{ session('error') }}
+                      </div>
+                  @endif
+                  @if($errors->any())
+                      <div class="alert alert-danger mt-2">
+                          <ul class="mb-0">
+                              @foreach($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  @endif
               </form>
           </div>
       </div>

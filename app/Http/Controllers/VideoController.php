@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateVideoRequest;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Controllers\SubscriberController;
 
 class VideoController extends Controller
 {
@@ -57,9 +58,18 @@ class VideoController extends Controller
             $data['video_file'] = $videoPath;
         }
 
-        Video::create($data);
+        $video = Video::create($data);
 
-        return redirect()->route('videos.index')->with('success', 'ویڈیو کامیابی سے شامل ہو گئی!');
+        // Send newsletter to subscribers
+        try {
+            $subscriberController = new SubscriberController();
+            $subscriberController->sendNewsletter($video, 'video');
+        } catch (\Exception $e) {
+            // Log error but don't fail the video creation
+            \Log::error('Newsletter send failed: ' . $e->getMessage());
+        }
+
+        return redirect()->route('videos.index')->with('success', 'Video created successfully!');
     }
 
     /**
@@ -115,7 +125,7 @@ class VideoController extends Controller
 
         $video->update($data);
 
-        return redirect()->route('videos.index')->with('success', 'ویڈیو کامیابی سے اپ ڈیٹ ہو گئی!');
+        return redirect()->route('videos.index')->with('success', 'Video updated successfully!');
     }
 
     /**
@@ -130,6 +140,6 @@ class VideoController extends Controller
 
         $video->delete();
 
-        return redirect()->route('videos.index')->with('success', 'ویڈیو کامیابی سے ڈیلیٹ ہو گئی!');
+        return redirect()->route('videos.index')->with('success', 'Video deleted successfully!');
     }
 }

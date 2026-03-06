@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\SubscriberController;
 
 class PostController extends Controller
 {
@@ -74,7 +75,6 @@ class PostController extends Controller
             $slug = $baseSlug . '-' . $count++;
         }
         $post->slug = $slug;
-
         $post->save();
 
         // Tags + Quotes same...
@@ -92,7 +92,16 @@ class PostController extends Controller
             }
         }
 
-        session()->flash('status', 'پوسٹ کامیابی سے بن گئی!');
+        session()->flash('status', 'Post created successfully!');
+
+        // Send newsletter to subscribers
+        try {
+            $subscriberController = new SubscriberController();
+            $subscriberController->sendNewsletter($post, 'post');
+        } catch (\Exception $e) {
+            // Log error but don't fail the post creation
+            \Log::error('Newsletter send failed: ' . $e->getMessage());
+        }
         return redirect()->route('posts.index');
     }
 
@@ -183,7 +192,7 @@ class PostController extends Controller
             }
         }
 
-        session()->flash('success', 'پوسٹ اپ ڈیٹ ہو گئی!');
+        session()->flash('success', 'Post updated successfully!');
         return redirect()->route('posts.index');
     }
 
@@ -197,7 +206,7 @@ class PostController extends Controller
         }
         $post->delete();
 
-        session()->flash('success', 'پوسٹ ڈیلیٹ ہو گئی!');
+        session()->flash('success', 'Post deleted successfully!');
         return redirect()->route('posts.index');
     }
 }
