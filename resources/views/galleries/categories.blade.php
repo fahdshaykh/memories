@@ -19,7 +19,7 @@
         <div class="card-masonry card-small">
             <div class="card">
                 <a href="{{ route('gallery.show', $category->slug) }}">
-                    <img class="card-vertical-img" src="{{ asset('category_images').'/'.$category->image }}" alt="{{ $category->slug }}" />    
+                    <img class="card-vertical-img" src="{{ $category->image ? asset('storage/' . $category->image) : asset('default.png') }}" alt="{{ $category->slug }}" />    
                 </a>
                 <div class="card-border">
                     <div class="card-body">
