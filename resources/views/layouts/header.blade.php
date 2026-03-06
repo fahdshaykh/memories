@@ -14,8 +14,8 @@
             <nav id="eskimo-main-menu" class="menu-main-menu-container">
                 <ul class="eskimo-menu-ul">
                     <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="{{ route('categories.user') }}">Galleries</a></li>
                     <li><a href="{{ route('videos.user') }}">Videos</a></li>
+                    <li><a href="{{ route('categories.user') }}">Galleries</a></li>
                 </ul>
             </nav>
         </div>

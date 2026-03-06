@@ -73,7 +73,7 @@ class WelcomeController extends Controller
     {
         $categories = Category::latest()->get();
 
-        return view('videos.videos', compact('categories'));
+        return view('videos.categories', compact('categories'));
     }
 
     public function video($slug)
@@ -82,6 +82,46 @@ class WelcomeController extends Controller
         $videos = Video::where('category_id', $category->id)->latest()->paginate(10);
 
         return view('videos.video', compact('videos', 'category'));
+    }
+
+    public function faq()
+    {
+        return view('pages.faq');
+    }
+
+    public function userGuide()
+    {
+        return view('pages.user-guide');
+    }
+
+    public function terms()
+    {
+        return view('pages.terms');
+    }
+
+    public function contact()
+    {
+        return view('pages.contact');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('pages.privacy-policy');
+    }
+
+    public function submitContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|min:10',
+        ]);
+
+        // Here you can add code to send email or save to database
+        // For now, just redirect with success message
+
+        return redirect()->route('contact')->with('success', 'Thank you for your message! We will get back to you within 24-48 hours.');
     }
 
 }

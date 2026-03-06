@@ -1,41 +1,52 @@
 <footer id="eskimo-footer">
-  <div class="container">
-      <div class="row eskimo-footer-wrapper">
-          <!-- FOOTER WIDGET 1 -->
-          <div class="col-12 col-lg-6 mb-4 mb-lg-0">
-              <h5 class="eskimo-title-with-border"><span>About Me</span></h5>
-              <p>Trusted by thousands of customers, my unique themes and plugins help you make beautiful responsive web sites with ease.</p>
-              <p><a href="{{ url('about') }}" class="btn btn-default">Read More</a></p>
-          </div>
-          <!-- FOOTER WIDGET 2 -->
-          <div class="col-12 col-lg-6">
-              <h5 class="eskimo-title-with-border"><span>Newsletter</span></h5>
-              <form method="post" action="{{ route('subscribe') }}" id="newsletter-form">
-                  @csrf
-                  <label>Subscribe to our mailing list!</label>
-                  <div class="input-group">
-                      <input type="email" class="form-control" name="email" id="subscribe-email" placeholder="Your email address" required />
-                      <div class="input-group-append">
-                          <button type="submit" class="btn btn-default" id="subscribe-btn">
-                              <span id="btn-text">Sign up</span>
-                              <span id="btn-spinner" class="d-none">
-                                  <span class="spinner-border-sm" role="status" aria-hidden="true"></span>
-                                  <span class="sr-only">Loading...</span>
-                              </span>
-                          </button>
-                      </div>
-                  </div>
-                  <div id="newsletter-message"></div>
-              </form>
-          </div>
-      </div>
-      <!-- CREDITS -->
-      <div class="eskimo-footer-credits">
-          <p>
-              Made with love by <a href="https://themeforest.net/user/egemenerd" target="_blank">Egemenerd</a>
-          </p>
-      </div>
-  </div>
+    <div class="container">
+        <div class="row eskimo-footer-wrapper">
+            <!-- FOOTER WIDGET 1 -->
+            <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+                <h5 class="eskimo-title-with-border"><span>About Me</span></h5>
+                <p>Trusted by thousands of customers, my unique themes and plugins help you make beautiful responsive web sites with ease.</p>
+                <p><a href="{{ url('about') }}" class="btn btn-default">Read More</a></p>
+            </div>
+            <!-- FOOTER WIDGET 2 -->
+            <div class="col-12 col-lg-6">
+                <h5 class="eskimo-title-with-border"><span>Newsletter</span></h5>
+                <form method="post" action="{{ route('subscribe') }}" id="newsletter-form">
+                    @csrf
+                    <label>Subscribe to our mailing list!</label>
+                    <div class="input-group">
+                        <input type="email" class="form-control" name="email" id="subscribe-email" placeholder="Your email address" required />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default" id="subscribe-btn">
+                                <span id="btn-text">Sign up</span>
+                                <span id="btn-spinner" class="d-none">
+                                    <span class="spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span class="sr-only">Loading...</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="newsletter-message"></div>
+                </form>
+            </div>
+        </div>
+        <!-- CREDITS -->
+        <div class="eskimo-footer-credits">
+            <div class="row">
+                <div class="col-6">
+                    <p>
+                        Since 2024 &copy; <a href="{{ url('/') }}">Wisherpro</a>. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-6 text-right">
+                    <a href="{{ route('faq') }}">FAQ</a> |
+                    <a href="{{ route('user-guide') }}">User guide</a> |
+                    <a href="{{ route('terms') }}">Terms of Service</a> |
+                    <a href="{{ route('contact') }}">Contact Us</a> |
+                    <a href="{{ route('privacy-policy') }}">Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
 
 {{-- AJAX Newsletter Script --}}

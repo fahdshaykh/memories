@@ -27,7 +27,7 @@ Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/search', [WelcomeController::class, 'search'])->name('search.posts');
 Route::get('/tags/{tag}', [TagController::class, 'show'])->name('tags.show');
 
-Route::get('/{slug?}', [WelcomeController::class, 'postDetail'])->name('welcome.show');
+Route::get('/post/{slug?}', [WelcomeController::class, 'postDetail'])->name('welcome.show');
 Route::get('/category/{slug?}', [WelcomeController::class, 'categoryPosts'])->name('category.posts');
 
 //this is gallery module sectio
@@ -38,6 +38,18 @@ Route::get('/videos/all', [WelcomeController::class, 'videos'])->name('videos.us
 Route::get('/videos/{slug?}', [WelcomeController::class, 'video'])->name('video.show');
 
 Route::view('/about-us', 'about')->name('about.index');
+
+/*
+|--------------------------------------------------------------------------
+| Pages Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/faq', [WelcomeController::class, 'faq'])->name('faq');
+Route::get('/user-guide', [WelcomeController::class, 'userGuide'])->name('user-guide');
+Route::get('/terms', [WelcomeController::class, 'terms'])->name('terms');
+Route::get('/contact', [WelcomeController::class, 'contact'])->name('contact');
+Route::post('/contact', [WelcomeController::class, 'submitContact'])->name('contact.submit');
+Route::get('/privacy-policy', [WelcomeController::class, 'privacyPolicy'])->name('privacy-policy');
 
 Route::prefix('admin')->group(function () {
     // Login Routes
@@ -53,7 +65,7 @@ Route::prefix('admin')->group(function () {
 
     Route::resource('categories', CategoryController::class);
     Route::get('category-status', [CategoryController::class, 'categoryStatus']);
-    
+
     Route::resource('posts', PostController::class);
 
     Route::resource('galleries', GalleryController::class);
