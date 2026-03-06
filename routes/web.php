@@ -24,7 +24,7 @@ use App\Http\Controllers\TagController;
 */
 
 Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
-Route::get('/', [WelcomeController::class, 'search'])->name('search.posts');
+Route::get('/search', [WelcomeController::class, 'search'])->name('search.posts');
 Route::get('/tags/{tag}', [TagController::class, 'show'])->name('tags.show');
 
 Route::get('/{slug?}', [WelcomeController::class, 'postDetail'])->name('welcome.show');

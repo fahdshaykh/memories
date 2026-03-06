@@ -18,10 +18,36 @@ class SubscriberController extends Controller
      */
     public function subscribe(StoreSubscriberRequest $request)
     {
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            try {
+                $subscriber = Subscriber::create([
+                    'email' => $request->email,
+                    'is_active' => true,
+                    'is_verified' => true,
+                    'verification_token' => md5($request->email . time()),
+                ]);
+
+                // Send confirmation email
+                Mail::to($subscriber->email)->send(new SubscriptionConfirmation($subscriber));
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Thank you for subscribing! You will receive updates about new posts and videos.'
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong. Please try again.'
+                ], 500);
+            }
+        }
+
+        // Non-AJAX fallback (for SEO/js disabled)
         $subscriber = Subscriber::create([
             'email' => $request->email,
             'is_active' => true,
-            'is_verified' => true, // Auto-verify for simplicity
+            'is_verified' => true,
             'verification_token' => md5($request->email . time()),
         ]);
 
