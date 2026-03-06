@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -35,14 +37,20 @@ class CategoryController extends Controller
     {
         $data = $request->validated();
 
-        if($request->image){
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.webp';
 
-            $originalFile = $request->file('image');
+            $img = Image::make($image->getRealPath());
+            $img->fit(1200, 700, function ($constraint) {
+                $constraint->upsize();
+            });
+            $img->encode('webp', 90);
 
-            $originalFile->move(public_path().'/category_images/', $post_file = time().'.'.$originalFile->getClientOriginalExtension());
+            $path = 'category_images/' . $filename;
+            Storage::disk('public')->put($path, $img->stream()->__toString());
 
-            $data['image'] = $post_file;
-
+            $data['image'] = $path;
         }
 
         $category = Category::create($data);

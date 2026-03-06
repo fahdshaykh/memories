@@ -45,7 +45,9 @@ class GalleryController extends Controller
             $filename = time() . '.webp';
 
             $img = Image::make($image->getRealPath());
-            // $img->resize(1200, 700, fn($c) => $c->aspectRatio()->upsize())->crop(1200, 700);
+            $img->fit(1200, 700, function ($constraint) {
+                $constraint->upsize();
+            });
             $img->encode('webp', 90);
 
             $path = 'gallery_images/' . $filename;
@@ -91,7 +93,9 @@ class GalleryController extends Controller
             $filename = time() . '.webp';
 
             $img = Image::make($image->getRealPath());
-            // $img->resize(1200, 700, fn($c) => $c->aspectRatio()->upsize())->crop(1200, 700);
+            $img->fit(1200, 700, function ($constraint) {
+                $constraint->upsize();
+            });
             $img->encode('webp', 90);
 
             $path = 'gallery_images/' . $filename;
