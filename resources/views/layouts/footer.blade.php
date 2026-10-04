@@ -3,7 +3,7 @@
         <div class="row eskimo-footer-wrapper">
             <!-- FOOTER WIDGET 1 -->
             <div class="col-12 col-lg-6 mb-4 mb-lg-0">
-                <h5 class="eskimo-title-with-border"><span>About Me</span></h5>
+                <h5 class="eskimo-title-with-border"><span>About Us</span></h5>
                 <p>Trusted by thousands of customers, my unique themes and plugins help you make beautiful responsive web sites with ease.</p>
                 <p><a href="{{ url('about') }}" class="btn btn-default">Read More</a></p>
             </div>
@@ -17,7 +17,7 @@
                         <input type="email" class="form-control" name="email" id="subscribe-email" placeholder="Your email address" required />
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-default" id="subscribe-btn">
-                                <span id="btn-text">Sign up</span>
+                                <span id="btn-text">Subscribe</span>
                                 <span id="btn-spinner" class="d-none">
                                     <span class="spinner-border-sm" role="status" aria-hidden="true"></span>
                                     <span class="sr-only">Loading...</span>

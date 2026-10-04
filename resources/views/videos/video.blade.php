@@ -54,6 +54,12 @@
                     class="video-player">
                     Your browser does not support the video tag.
                 </video>
+                <!-- Center Play Icon -->
+                <div class="video-card-play" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff" style="margin-left: 3px;">
+                        <polygon points="6,4 20,12 6,20"/>
+                    </svg>
+                </div>
                 <div class="video-info">
                     <div class="video-title-row">
                         <a href="{{ asset('storage/' . $video->video_file) }}" download class="btn btn-default download-btn" title="Download Video" onclick="event.stopPropagation()">
@@ -133,6 +139,31 @@
 .video-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.video-card-play {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    background: #111111;
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.video-card:hover .video-card-play {
+    transform: translate(-50%, -50%) scale(1.15);
+    border-color: #f5593d;
+    box-shadow: 0 8px 24px rgba(245, 89, 61, 0.5);
 }
 
 .share-dropdown {
