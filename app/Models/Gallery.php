@@ -13,12 +13,13 @@ class Gallery extends Model
         'category_id',
         'title',
         'slug',
+        'content',
         'image',
         'status'
     ];
 
     public function category()
     {
-        return $this->hasMany(Category::class);
+        return $this->belongsTo(Category::class);
     }
 }

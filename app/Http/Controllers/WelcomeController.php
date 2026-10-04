@@ -44,18 +44,132 @@ class WelcomeController extends Controller
 
     public function search(Request $request)
     {
-        $searchTerm = $request->input('search');
+        $searchTerm = trim((string) $request->input('search', ''));
+        $type = strtolower((string) $request->input('type', 'all'));
 
-        $posts = Post::where(function ($query) use ($searchTerm) {
-            $query->where('title', 'LIKE', '%' . $searchTerm . '%')
-                  ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
-        })->orWhereHas('category', function ($query) use ($searchTerm) {
-            $query->where('title', 'LIKE', '%' . $searchTerm . '%')
-                ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
-        })->latest()->paginate(10);
+        if (!in_array($type, ['all', 'posts', 'galleries', 'videos'])) {
+            $type = 'all';
+        }
 
+        $words = array_filter(explode(' ', $searchTerm));
 
-        return view('welcome', compact('posts'));
+        // 1. Posts Query (with category, tags, and quotes)
+        $postsQuery = Post::query()->with(['category', 'tags']);
+        if ($searchTerm !== '') {
+            $postsQuery->where(function ($q) use ($searchTerm, $words) {
+                $q->where('title', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('content', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('slug', 'LIKE', '%' . $searchTerm . '%');
+
+                foreach ($words as $word) {
+                    $q->orWhere('title', 'LIKE', '%' . $word . '%');
+                }
+
+                $q->orWhereHas('quotes', function ($quoteQ) use ($searchTerm) {
+                    $quoteQ->where('quote', 'LIKE', '%' . $searchTerm . '%');
+                });
+
+                $q->orWhereHas('category', function ($catQ) use ($searchTerm) {
+                    $catQ->where('title', 'LIKE', '%' . $searchTerm . '%')
+                         ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
+                });
+
+                $q->orWhereHas('tags', function ($tagQ) use ($searchTerm) {
+                    $tagQ->where('name', 'LIKE', '%' . $searchTerm . '%');
+                });
+            });
+
+            $postsQuery->orderByRaw("CASE WHEN title LIKE ? THEN 1 WHEN title LIKE ? THEN 2 ELSE 3 END", [
+                $searchTerm . '%',
+                '%' . $searchTerm . '%'
+            ]);
+        }
+        $postsQuery->latest();
+
+        // 2. Galleries Query
+        $galleriesQuery = Gallery::query()->with('category')->where('status', 1);
+        if ($searchTerm !== '') {
+            $galleriesQuery->where(function ($q) use ($searchTerm, $words) {
+                $q->where('title', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('content', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('slug', 'LIKE', '%' . $searchTerm . '%');
+
+                foreach ($words as $word) {
+                    $q->orWhere('title', 'LIKE', '%' . $word . '%');
+                }
+
+                $q->orWhereHas('category', function ($catQ) use ($searchTerm) {
+                    $catQ->where('title', 'LIKE', '%' . $searchTerm . '%')
+                         ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
+                });
+            });
+
+            $galleriesQuery->orderByRaw("CASE WHEN title LIKE ? THEN 1 WHEN title LIKE ? THEN 2 ELSE 3 END", [
+                $searchTerm . '%',
+                '%' . $searchTerm . '%'
+            ]);
+        }
+        $galleriesQuery->latest();
+
+        // 3. Videos Query
+        $videosQuery = Video::query()->with('category')->where('status', 1);
+        if ($searchTerm !== '') {
+            $videosQuery->where(function ($q) use ($searchTerm, $words) {
+                $q->where('title', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('content', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('slug', 'LIKE', '%' . $searchTerm . '%');
+
+                foreach ($words as $word) {
+                    $q->orWhere('title', 'LIKE', '%' . $word . '%');
+                }
+
+                $q->orWhereHas('category', function ($catQ) use ($searchTerm) {
+                    $catQ->where('title', 'LIKE', '%' . $searchTerm . '%')
+                         ->orWhere('content', 'LIKE', '%' . $searchTerm . '%');
+                });
+            });
+
+            $videosQuery->orderByRaw("CASE WHEN title LIKE ? THEN 1 WHEN title LIKE ? THEN 2 ELSE 3 END", [
+                $searchTerm . '%',
+                '%' . $searchTerm . '%'
+            ]);
+        }
+        $videosQuery->latest();
+
+        // Compute counts across all content types
+        $postsCount = (clone $postsQuery)->count();
+        $galleriesCount = (clone $galleriesQuery)->count();
+        $videosCount = (clone $videosQuery)->count();
+        $totalAll = $postsCount + $galleriesCount + $videosCount;
+
+        $counts = [
+            'all' => $totalAll,
+            'posts' => $postsCount,
+            'galleries' => $galleriesCount,
+            'videos' => $videosCount,
+        ];
+
+        // Fetch data based on requested type
+        if ($type === 'posts') {
+            $posts = $postsQuery->paginate(10)->withQueryString();
+            $galleries = collect();
+            $videos = collect();
+        } elseif ($type === 'galleries') {
+            $posts = collect();
+            $galleries = $galleriesQuery->paginate(12)->withQueryString();
+            $videos = collect();
+        } elseif ($type === 'videos') {
+            $posts = collect();
+            $galleries = collect();
+            $videos = $videosQuery->paginate(12)->withQueryString();
+        } else {
+            // 'all': Show top results for each section
+            $posts = (clone $postsQuery)->take(6)->get();
+            $galleries = (clone $galleriesQuery)->take(6)->get();
+            $videos = (clone $videosQuery)->take(6)->get();
+        }
+
+        return view('pages.search_results', compact('posts', 'galleries', 'videos', 'searchTerm', 'type', 'counts', 'totalAll'));
     }
 
     public function categories()
