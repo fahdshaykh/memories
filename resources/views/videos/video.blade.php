@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Welcome to Wisherpro')
+@section('title', $category->title . ' Videos | Wisherpro')
 
 @section('content')
 
@@ -121,17 +121,18 @@
 
 .video-card {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 0 !important;
+    border: 1px solid #e9ecef;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
     position: relative;
     cursor: pointer;
 }
 
 .video-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
 }
 
 .share-dropdown {
@@ -145,36 +146,36 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 0 !important;
+    background: #212529;
     color: #fff;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .share-toggle:hover {
-    background: #222;
+    background: #f5593d;
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .share-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 4px);
     right: 0;
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border-radius: 0 !important;
+    border: 1px solid #212529;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     min-width: 160px;
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transform: translateY(-6px);
+    transition: all 0.2s ease;
 }
 
 .share-dropdown.active .share-menu {
@@ -290,9 +291,10 @@
     max-width: 1000px;
     width: 100%;
     background: #000;
-    border-radius: 12px;
+    border-radius: 0 !important;
+    border: 2px solid #333;
     overflow: hidden;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
 }
 
 .lightbox-close {
@@ -301,21 +303,20 @@
     right: 15px;
     width: 44px;
     height: 44px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-radius: 50%;
+    background: #212529;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0 !important;
     color: #fff;
     cursor: pointer;
     z-index: 10;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .lightbox-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
+    background: #f5593d;
 }
 
 .lightbox-header {
@@ -335,7 +336,9 @@
     margin: 0;
     color: #fff;
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     flex: 1;
     padding-right: 20px;
@@ -345,20 +348,24 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
+    padding: 10px 22px;
     background: #333;
     color: #fff;
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
     white-space: nowrap;
+    border: 1px solid #555;
 }
 
 .download-btn-lightbox:hover {
-    background: #222;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    background: #f5593d;
+    border-color: #f5593d;
+    color: #fff;
 }
 
 .lightbox-video {

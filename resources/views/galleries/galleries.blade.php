@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title','Welcome to Wisherpro')
+@section('title', $category->title . ' Galleries | Wisherpro')
 
 @section('content')
 
@@ -24,7 +24,7 @@
                 <img src="{{ $gallery->image ? asset('storage/' . $gallery->image) : asset('placeholder.jpg') }}"
                      alt="{{ $gallery->title ?? 'Gallery Image' }}"
                      loading="lazy"
-                     class="img-fluid rounded shadow">
+                     class="img-fluid shadow">
             </a>
         </div>
         @endforeach
@@ -35,7 +35,6 @@
 
 @endsection
 
-{{-- YE SAB NAYA ADD KARO (END MEIN) --}}
 @section('scripts')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.gallery.min.css">
@@ -55,19 +54,14 @@ document.addEventListener('DOMContentLoaded', function() {
         openSpeed: 300,
         closeSpeed: 300,
 
-        // YE FIXED HAI — SIRF EK BAR CAPTION ADD HOGA
         afterContent: function() {
-            // Purani caption remove karo (agar hai to)
             this.$instance.find('.featherlight-caption').remove();
-
-            // Nayi caption add karo
             var caption = this.$currentTarget.find('img').attr('alt') || 'Gallery Image';
             this.$instance.find('.featherlight-content').append(
                 '<div class="featherlight-caption">' + caption + '</div>'
             );
         },
 
-        // Jab lightbox band ho → caption bhi clear ho jaye
         beforeClose: function() {
             this.$instance.find('.featherlight-caption').remove();
         }
@@ -79,27 +73,30 @@ document.addEventListener('DOMContentLoaded', function() {
 .eskimo-gallery-item {
     margin-bottom: 20px;
     overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
 }
 .eskimo-gallery-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
 }
 .eskimo-gallery-item img {
     width: 100%;
     height: 280px;
     object-fit: cover;
+    border-radius: 0 !important;
     transition: transform 0.4s ease;
 }
 .eskimo-gallery-item:hover img {
-    transform: scale(1.08);
+    transform: scale(1.06);
 }
 
-/* Featherlight Custom */
+/* Featherlight Custom - Sharp Rectangular */
 .featherlight .featherlight-content {
-    border: 8px solid #fff;
+    border: 4px solid #fff;
+    border-radius: 0 !important;
     box-shadow: 0 0 40px rgba(0,0,0,0.5);
 }
 .featherlight-next span, .featherlight-previous span {
@@ -108,19 +105,23 @@ document.addEventListener('DOMContentLoaded', function() {
     text-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
 .featherlight-close-icon {
-    background: rgba(0,0,0,0.6);
+    background: #212529;
     width: 40px;
     height: 40px;
     line-height: 40px;
-    border-radius: 50%;
-    font-size: 20px;
+    border-radius: 0 !important;
+    font-size: 18px;
 }
 .featherlight-caption {
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     color: #fff;
     padding: 12px 20px;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     text-align: center;
+    border-radius: 0 !important;
     margin-top: 10px;
 }
 .spinner {

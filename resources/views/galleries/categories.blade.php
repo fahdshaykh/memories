@@ -7,12 +7,14 @@
 <style>
 .gallery-count-badge {
     display: inline-block;
-    background: #333;
+    background: #212529;
     color: #fff;
     padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 0 !important;
 }
 
 .card-title-wrapper {
@@ -30,7 +32,7 @@
 <!-- PAGE TITLE -->
 
 <div class="eskimo-page-title">
-    <h1 class="no-border">Welcome Memories Quotes</h1>
+    <h1 class="no-border">Gallery Collections</h1>
 </div>
 <!-- BLOG POSTS -->
 <div class="eskimo-masonry-grid">

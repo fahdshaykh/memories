@@ -8,46 +8,50 @@
 .video-card-modern {
     position: relative;
     background: #fff;
-    border-radius: 12px;
+    border-radius: 0 !important;
+    border: 1px solid #e9ecef;
     margin-bottom: 30px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: all 0.25s ease;
 }
 
 .video-card-modern:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
 }
 
 .video-card-modern .video-thumb {
     position: relative;
     height: 220px;
     overflow: hidden;
+    border-radius: 0 !important;
 }
 
 .video-card-modern .video-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 0 !important;
     transition: transform 0.5s ease;
 }
 
 .video-card-modern:hover .video-thumb img {
-    transform: scale(1.15);
+    transform: scale(1.1);
 }
 
 .video-card-modern .video-overlay {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #212529;
     color: #fff;
     padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+    border-radius: 0 !important;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .video-card-modern .video-body {
@@ -58,7 +62,7 @@
     font-size: 18px;
     font-weight: 700;
     margin: 0 0 12px 0;
-    color: #333;
+    color: #212529;
 }
 
 .video-card-modern .video-stats {
@@ -77,12 +81,12 @@
 
 .video-card-modern .stat i {
     font-size: 14px;
-    color: #667eea;
+    color: #212529;
 }
 
 .video-card-modern .video-desc {
     font-size: 14px;
-    color: #888;
+    color: #666;
     line-height: 1.6;
     margin-bottom: 15px;
 }
@@ -99,19 +103,21 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 25px;
-    background: #333;
+    padding: 10px 22px;
+    background: #212529;
     color: #fff;
     text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    border-radius: 0 !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
 }
 
 .video-card-modern .view-link:hover {
-    background: #000;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background: #f5593d;
+    color: #fff;
 }
 
 .video-card-modern .date-info {
@@ -129,7 +135,7 @@
 <div class="clearfix"></div>
 <!-- PAGE TITLE -->
 <div class="eskimo-page-title">
-    <h1 class="no-border">Welcome Memories Quotes</h1>
+    <h1 class="no-border">Video Collections</h1>
 </div>
 
 <!-- Video Categories Grid -->
