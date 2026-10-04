@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Dashboard\PostCategoryController;
+use App\Http\Controllers\Dashboard\GalleryCategoryController;
+use App\Http\Controllers\Dashboard\VideoCategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -64,8 +66,21 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
 
-    Route::resource('categories', CategoryController::class);
-    Route::get('category-status', [CategoryController::class, 'categoryStatus']);
+    // Post Categories
+    Route::resource('posts/categories', PostCategoryController::class, ['as' => 'posts']);
+    Route::get('posts/category-status', [PostCategoryController::class, 'categoryStatus'])->name('posts.categories.status');
+
+    // Gallery Categories
+    Route::resource('galleries/categories', GalleryCategoryController::class, ['as' => 'galleries']);
+    Route::get('galleries/category-status', [GalleryCategoryController::class, 'categoryStatus'])->name('galleries.categories.status');
+
+    // Video Categories
+    Route::resource('videos/categories', VideoCategoryController::class, ['as' => 'videos']);
+    Route::get('videos/category-status', [VideoCategoryController::class, 'categoryStatus'])->name('videos.categories.status');
+
+    // Fallback for legacy categories route
+    Route::resource('categories', PostCategoryController::class);
+    Route::get('category-status', [PostCategoryController::class, 'categoryStatus']);
 
     Route::resource('posts', PostController::class);
 

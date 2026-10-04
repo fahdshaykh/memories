@@ -143,15 +143,22 @@
     <div class="eskimo-two-columns" data-columns>
         @foreach ($categories as $index => $category)
             @php
-                $videoCount = \App\Models\Video::where('category_id', $category->id)->count();
+                $videoCount = \App\Models\Video::where('category_id', $category->id)->where('status', 1)->count();
+                $imagePath = $category->image;
+                if ($imagePath && \Illuminate\Support\Facades\Storage::disk('public')->exists($imagePath)) {
+                    $videoImg = asset('storage/' . $imagePath);
+                } elseif ($imagePath && file_exists(public_path('category_images/' . basename($imagePath)))) {
+                    $videoImg = asset('category_images/' . basename($imagePath));
+                } else {
+                    $videoImg = asset('gallery.jpg');
+                }
             @endphp
 
             <div class="card-masonry card-small">
                 <div class="video-card-modern">
                     <div class="video-thumb">
                         <a href="{{ route('video.show', $category->slug) }}">
-                            <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('gallery.jpg') }}"
-                                 alt="{{ $category->title }}">
+                            <img src="{{ $videoImg }}" alt="{{ $category->title }}">
                         </a>
                         @if($index === 0)
                             {{-- <span class="video-overlay">⭐ Featured</span> --}}
@@ -166,16 +173,16 @@
                                 <i class="fas fa-video"></i>
                                 <span>{{ $videoCount }} {{ $videoCount == 1 ? 'Video' : 'Videos' }}</span>
                             </div>
-                            @if($category->description)
+                            @if($category->content)
                             <div class="stat">
                                 <i class="fas fa-align-left"></i>
-                                <span>{{ Str::limit(strip_tags($category->description), 20) }}</span>
+                                <span>{{ Str::limit(strip_tags($category->content), 20) }}</span>
                             </div>
                             @endif
                         </div>
 
-                        @if($category->description)
-                        <p class="video-desc">{{ Str::limit(strip_tags($category->description), 80) }}</p>
+                        @if($category->content)
+                        <p class="video-desc">{{ Str::limit(strip_tags($category->content), 80) }}</p>
                         @endif
 
                         <div class="video-footer">

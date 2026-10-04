@@ -36,6 +36,6 @@ class Video extends Model
      */
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(VideoCategory::class, 'category_id');
     }
 }

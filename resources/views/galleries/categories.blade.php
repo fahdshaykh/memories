@@ -40,13 +40,21 @@
         <!-- POST 1 -->
         @foreach ($categories as $category)
             @php
-                $galleryCount = \App\Models\Gallery::where('category_id', $category->id)->count();
+                $galleryCount = \App\Models\Gallery::where('category_id', $category->id)->where('status', 1)->count();
+                $imagePath = $category->image;
+                if ($imagePath && \Illuminate\Support\Facades\Storage::disk('public')->exists($imagePath)) {
+                    $catImg = asset('storage/' . $imagePath);
+                } elseif ($imagePath && file_exists(public_path('category_images/' . basename($imagePath)))) {
+                    $catImg = asset('category_images/' . basename($imagePath));
+                } else {
+                    $catImg = asset('default.png');
+                }
             @endphp
 
         <div class="card-masonry card-small">
-            <div class="card">
+            <div class="card" style="border-radius: 0 !important;">
                 <a href="{{ route('gallery.show', $category->slug) }}">
-                    <img class="card-vertical-img" src="{{ $category->image ? asset('storage/' . $category->image) : asset('default.png') }}" alt="{{ $category->slug }}" />
+                    <img class="card-vertical-img" src="{{ $catImg }}" alt="{{ $category->title }}" style="border-radius: 0 !important;" />
                 </a>
                 <div class="card-border">
                     <div class="card-body">

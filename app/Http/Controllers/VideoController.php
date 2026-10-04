@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use App\Http\Requests\StoreVideoRequest;
 use App\Http\Requests\UpdateVideoRequest;
-use App\Models\Category;
+use App\Models\VideoCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Controllers\SubscriberController;
@@ -27,7 +27,7 @@ class VideoController extends Controller
      */
     public function create()
     {
-        $categories = Category::latest()->get();
+        $categories = VideoCategory::where('status', true)->orderBy('title')->get();
 
         return view('dashboard.videos.create', compact('categories'));
     }
@@ -85,7 +85,7 @@ class VideoController extends Controller
      */
     public function edit(Video $video)
     {
-        $categories = Category::latest()->get();
+        $categories = VideoCategory::where('status', true)->orderBy('title')->get();
 
         return view('dashboard.videos.edit', compact('video', 'categories'));
     }

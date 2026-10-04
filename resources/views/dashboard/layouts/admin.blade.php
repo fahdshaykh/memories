@@ -73,32 +73,23 @@
               </a>
             </li>
 
-            <!-- Categories -->
-            <li class="dropdown {{ request()->is('admin/categories*') ? 'active' : '' }}">
-              <a href="#" class="menu-toggle nav-link has-dropdown {{ request()->is('admin/categories*') ? 'toggled' : '' }}">
-                <i data-feather="briefcase"></i><span>Categories</span>
-              </a>
-              <ul class="dropdown-menu" style="{{ request()->is('admin/categories*') ? 'display:block;' : '' }}">
-                <li class="{{ request()->is('admin/categories') ? 'active' : '' }}">
-                  <a class="nav-link" href="{{ route('categories.index') }}">Category List</a>
-                </li>
-                <li class="{{ request()->is('admin/categories/create') ? 'active' : '' }}">
-                  <a class="nav-link" href="{{ route('categories.create') }}">Create Category</a>
-                </li>
-              </ul>
-            </li>
-
             <!-- Posts -->
             <li class="dropdown {{ request()->is('admin/posts*') ? 'active' : '' }}">
               <a href="#" class="menu-toggle nav-link has-dropdown {{ request()->is('admin/posts*') ? 'toggled' : '' }}">
                 <i data-feather="file-text"></i><span>Posts</span>
               </a>
               <ul class="dropdown-menu" style="{{ request()->is('admin/posts*') ? 'display:block;' : '' }}">
-                <li class="{{ request()->is('admin/posts') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('posts.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('posts.index') }}">Post List</a>
                 </li>
-                <li class="{{ request()->is('admin/posts/create') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('posts.create') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('posts.create') }}">Create Post</a>
+                </li>
+                <li class="{{ request()->routeIs('posts.categories.index') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('posts.categories.index') }}">Post Categories</a>
+                </li>
+                <li class="{{ request()->routeIs('posts.categories.create') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('posts.categories.create') }}">Create Post Category</a>
                 </li>
               </ul>
             </li>
@@ -109,11 +100,17 @@
                 <i data-feather="image"></i><span>Galleries</span>
               </a>
               <ul class="dropdown-menu" style="{{ request()->is('admin/galleries*') ? 'display:block;' : '' }}">
-                <li class="{{ request()->is('admin/galleries') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('galleries.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('galleries.index') }}">Gallery List</a>
                 </li>
-                <li class="{{ request()->is('admin/galleries/create') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('galleries.create') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('galleries.create') }}">Create Gallery</a>
+                </li>
+                <li class="{{ request()->routeIs('galleries.categories.index') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('galleries.categories.index') }}">Gallery Categories</a>
+                </li>
+                <li class="{{ request()->routeIs('galleries.categories.create') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('galleries.categories.create') }}">Create Gallery Category</a>
                 </li>
               </ul>
             </li>
@@ -124,11 +121,17 @@
                 <i data-feather="video"></i><span>Videos</span>
               </a>
               <ul class="dropdown-menu" style="{{ request()->is('admin/videos*') ? 'display:block;' : '' }}">
-                <li class="{{ request()->is('admin/videos') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('videos.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('videos.index') }}">Video List</a>
                 </li>
-                <li class="{{ request()->is('admin/videos/create') ? 'active' : '' }}">
+                <li class="{{ request()->routeIs('videos.create') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('videos.create') }}">Create Video</a>
+                </li>
+                <li class="{{ request()->routeIs('videos.categories.index') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('videos.categories.index') }}">Video Categories</a>
+                </li>
+                <li class="{{ request()->routeIs('videos.categories.create') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('videos.categories.create') }}">Create Video Category</a>
                 </li>
               </ul>
             </li>
@@ -172,5 +175,13 @@
   <script src="{{ asset('admin/assets/js/scripts.js') }}"></script>
   <script src="{{ asset('admin/assets/js/custom.js') }}"></script>
   @yield('script')
+  <script>
+    // Ensure loader overlay always fades out as soon as DOM is ready
+    $(document).ready(function() {
+      setTimeout(function() {
+        $(".loader").fadeOut("fast");
+      }, 150);
+    });
+  </script>
 </body>
 </html>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGalleryRequest;
 use App\Http\Requests\UpdateGalleryRequest;
-use App\Models\Category;
+use App\Models\GalleryCategory;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -29,7 +29,7 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        $categories = Category::latest()->get();
+        $categories = GalleryCategory::where('status', true)->orderBy('title')->get();
 
         return view('dashboard.galleries.create', compact('categories'));
     }
@@ -84,7 +84,9 @@ class GalleryController extends Controller
      */
     public function edit(Gallery $gallery)
     {
-        return view('dashboard.galleries.edit', ['gallery' => $gallery]);
+        $categories = GalleryCategory::where('status', true)->orderBy('title')->get();
+
+        return view('dashboard.galleries.edit', ['gallery' => $gallery, 'categories' => $categories]);
     }
 
     /**

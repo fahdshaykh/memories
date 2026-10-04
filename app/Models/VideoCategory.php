@@ -5,21 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Gallery extends Model
+class VideoCategory extends Model
 {
     use HasFactory;
 
+    protected $table = 'video_categories';
+
     protected $fillable = [
-        'category_id',
         'title',
         'slug',
         'content',
         'image',
-        'status'
+        'status',
     ];
 
-    public function category()
+    public function videos()
     {
-        return $this->belongsTo(GalleryCategory::class, 'category_id');
+        return $this->hasMany(Video::class, 'category_id');
     }
 }

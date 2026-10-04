@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Models\Category;
+use App\Models\PostCategory;
 use App\Models\Post;
 use App\Models\Quote;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('status', true)->get();
+        $categories = PostCategory::where('status', true)->orderBy('title')->get();
         return view('dashboard.posts.create', compact('categories'));
     }
 
@@ -118,7 +118,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $categories = Category::where('status', true)->get();
+        $categories = PostCategory::where('status', true)->orderBy('title')->get();
 
         $quotes = Quote::where('post_id', $post->id)
                    ->orderBy('order', 'asc')

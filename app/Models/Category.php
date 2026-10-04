@@ -10,12 +10,33 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
+        'type',
         'title',
         'slug',
         'content',
         'image',
         'status'
     ];
+
+    public function scopeForPosts($query)
+    {
+        return $query->where('type', 'post');
+    }
+
+    public function scopeForGalleries($query)
+    {
+        return $query->where('type', 'gallery');
+    }
+
+    public function scopeForVideos($query)
+    {
+        return $query->where('type', 'video');
+    }
+
+    public function scopeOfType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
 
     public function posts()
     {

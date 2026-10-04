@@ -649,7 +649,7 @@
 
 .lightbox-close {
     position: absolute;
-    top: 15px;
+    top: 20px;
     right: 15px;
     width: 42px;
     height: 42px;

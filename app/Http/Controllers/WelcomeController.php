@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\PostCategory;
+use App\Models\GalleryCategory;
+use App\Models\VideoCategory;
 use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\Quote;
@@ -24,11 +26,10 @@ class WelcomeController extends Controller
 
     public function categoryPosts($slug = null)
     {
-
-        $category = Category::where('slug', $slug)->first();
+        $category = PostCategory::where('slug', $slug)->firstOrFail();
         $posts = Post::latest()->where('category_id', $category->id)->paginate(10);
 
-        return view('posts.category_posts', compact('posts'));
+        return view('posts.category_posts', compact('posts', 'category'));
     }
 
     public function postDetail($slug)
@@ -174,29 +175,29 @@ class WelcomeController extends Controller
 
     public function categories()
     {
-        $categories = Category::latest()->get();
+        $categories = GalleryCategory::where('status', 1)->latest()->get();
         return view('galleries.categories', compact('categories'));
     }
 
     public function gallery($slug)
     {
-        $category = Category::where('slug', $slug)->first();
+        $category = GalleryCategory::where('slug', $slug)->firstOrFail();
 
-        $galleries = Gallery::where('category_id', $category->id)->latest()->paginate(10);;
+        $galleries = Gallery::where('category_id', $category->id)->latest()->paginate(10);
 
         return view('galleries.galleries', compact('galleries', 'category'));
     }
 
     public function videos()
     {
-        $categories = Category::latest()->get();
+        $categories = VideoCategory::where('status', 1)->latest()->get();
 
         return view('videos.categories', compact('categories'));
     }
 
     public function video($slug)
     {
-        $category = Category::where('slug', $slug)->first();
+        $category = VideoCategory::where('slug', $slug)->firstOrFail();
         $videos = Video::where('category_id', $category->id)->latest()->paginate(10);
 
         return view('videos.video', compact('videos', 'category'));

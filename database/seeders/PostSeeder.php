@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use App\Models\PostCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,7 +14,7 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         $posts_count = (int)$this->command->ask('How many posts wish to create?', 50);
-        $categories = Category::all();
+        $categories = PostCategory::all();
 
         \App\Models\Post::factory($posts_count)->make()->each(function($post) use($categories) {
             $post->category_id = $categories->random()->id;

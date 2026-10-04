@@ -22,13 +22,20 @@ class UpdateCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $category = $this->route('category');
+        $type = is_object($category) ? $category->type : ($this->input('type') ?? 'post');
+
         return [
-            'title' => 'required|min:4|max:255',
+            'title' => 'required|min:2|max:255',
             'slug' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('categories', 'slug')->ignore($this->route('category')), // Unique validation with exclusion
+                Rule::unique('categories', 'slug')
+                    ->where(function ($query) use ($type) {
+                        return $query->where('type', $type);
+                    })
+                    ->ignore($category),
             ],
             'content' => 'nullable',
             'image' => 'nullable',

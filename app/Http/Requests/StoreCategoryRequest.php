@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -22,11 +23,19 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|min:4|max:255',
-            'slug' => 'required|string|max:255|unique:categories,slug', // Unique validation for the slug
+            'type' => 'required|in:post,gallery,video',
+            'title' => 'required|min:2|max:255',
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categories', 'slug')->where(function ($query) {
+                    return $query->where('type', $this->input('type', 'post'));
+                }),
+            ],
             'content' => 'nullable',
             'image' => 'nullable',
-            'status' => '1',
+            'status' => 'nullable',
         ];
     }
 }
