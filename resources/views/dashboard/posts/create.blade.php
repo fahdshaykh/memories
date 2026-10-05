@@ -100,11 +100,8 @@
                         </div>
                     </div>
 
-
-                    {{-- <div class="form-group mb-2">
-                        <label>Content</label>
-                        <textarea class="summernote" name="more_content"></textarea>
-                    </div> --}}
+                    <!-- SEO & Google Ranking Suite -->
+                    @include('dashboard.partials.seo_fields', ['model' => null])
 
                 </div>
 

@@ -1,6 +1,42 @@
 @extends('layouts.app')
 
-@section('title','Video Categories - Wisherpro')
+@section('title', 'Video Stories & Clips | Wisherpro')
+@section('meta_description', 'Discover inspiring short video stories, memorable clips, and cinematic moments on Wisherpro.')
+@section('meta_keywords', 'videos, video stories, video categories, short clips, inspirational videos, wisherpro')
+@section('canonical_url', route('videos.user'))
+@section('og_type', 'website')
+
+@section('schema_json')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Video Stories & Collections",
+    "description": "Discover inspiring short video stories, memorable clips, and cinematic moments on Wisherpro.",
+    "url": "{{ route('videos.user') }}"
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Videos",
+            "item": "{{ route('videos.user') }}"
+        }
+    ]
+}
+</script>
+@endsection
 
 @section('content')
 

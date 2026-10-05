@@ -62,10 +62,14 @@ class PostController extends Controller
         }
 
         // Baki sab same...
-        $post->category_id = $request->category_id;
-        $post->title       = $request->title;
-        $post->content     = $request->content;
-        $post->published_at = now();
+        $post->category_id      = $request->category_id;
+        $post->title            = $request->title;
+        $post->content          = $request->content;
+        $post->meta_title       = $request->meta_title;
+        $post->meta_description = $request->meta_description;
+        $post->meta_keywords    = $request->meta_keywords;
+        $post->canonical_url    = $request->canonical_url;
+        $post->published_at     = now();
 
         // Slug logic...
         $slug = $request->filled('slug') ? Str::slug($request->slug, '-') : Str::slug($request->title, '-');
@@ -159,10 +163,14 @@ class PostController extends Controller
         }
 
         // Baki sab same...
-        $post->category_id = $request->category_id;
-        $post->title       = $request->title;
-        $post->content     = $request->content;
-        $post->published_at = now();
+        $post->category_id      = $request->category_id;
+        $post->title            = $request->title;
+        $post->content          = $request->content;
+        $post->meta_title       = $request->meta_title;
+        $post->meta_description = $request->meta_description;
+        $post->meta_keywords    = $request->meta_keywords;
+        $post->canonical_url    = $request->canonical_url;
+        $post->published_at     = now();
 
         $slug = $request->filled('slug') ? Str::slug($request->slug, '-') : Str::slug($request->title, '-');
         $baseSlug = $slug;

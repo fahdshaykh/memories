@@ -1,20 +1,90 @@
 @extends('layouts.app')
 
-@section('title', $category->title . ' Videos | Wisherpro')
+@section('title', ($category->seo_title ?: $category->title . ' Video Stories & Clips') . ' | Wisherpro')
+@section('meta_description', $category->seo_description ?: ('Watch ' . $category->title . ' short videos, life moments, and inspirational video stories on Wisherpro.'))
+@section('meta_keywords', $category->seo_keywords ?: ($category->title . ', ' . $category->title . ' videos, video clips, video stories, inspirational videos, wisherpro'))
+@section('canonical_url', $category->canonical_url ?: route('video.show', $category->slug))
+@section('og_type', 'video.other')
+@if($category->image)
+    @section('og_image', asset('storage/' . $category->image))
+@endif
+
+@section('schema_json')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ addslashes($category->title) }} Video Stories",
+    "description": "{{ addslashes($category->seo_description ?: 'Watch ' . $category->title . ' short videos and inspirational clips on Wisherpro.') }}",
+    "url": "{{ route('video.show', $category->slug) }}",
+    "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": [
+            @foreach ($videos as $index => $vid)
+            {
+                "@type": "ListItem",
+                "position": {{ $index + 1 }},
+                "item": {
+                    "@type": "VideoObject",
+                    "name": "{{ addslashes($vid->title ?? ($category->title . ' Video ' . ($index + 1))) }}",
+                    "description": "{{ addslashes($category->title . ' video clip on Wisherpro') }}",
+                    "thumbnailUrl": "{{ $vid->thumbnail ? asset('storage/' . $vid->thumbnail) : ($category->image ? asset('storage/' . $category->image) : asset('default.png')) }}",
+                    "contentUrl": "{{ asset('storage/' . $vid->video_file) }}",
+                    "uploadDate": "{{ $vid->created_at ? $vid->created_at->toIso8601String() : now()->toIso8601String() }}"
+                }
+            }@if(!$loop->last),@endif
+            @endforeach
+        ]
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Videos",
+            "item": "{{ route('videos.user') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ addslashes($category->title) }}",
+            "item": "{{ route('video.show', $category->slug) }}"
+        }
+    ]
+}
+</script>
+@endsection
 
 @section('content')
 
 <div class="clearfix"></div>
+
+<!-- BREADCRUMB NAVIGATION -->
+<nav aria-label="breadcrumb" class="mb-3" style="font-size: 0.85rem; margin-top: 15px;">
+    <ol class="breadcrumb" style="background: transparent; padding: 0; margin-bottom: 0; display: flex; flex-wrap: wrap; list-style: none;">
+        <li class="breadcrumb-item"><a href="{{ url('/') }}" style="color: #64748b; text-decoration: none;"><i class="fa fa-home"></i> Home</a></li>
+        <li style="margin: 0 8px; color: #cbd5e1;">/</li>
+        <li class="breadcrumb-item"><a href="{{ route('videos.user') }}" style="color: #64748b; text-decoration: none;">Videos</a></li>
+        <li style="margin: 0 8px; color: #cbd5e1;">/</li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: #0f172a; font-weight: 600;">{{ $category->title }}</li>
+    </ol>
+</nav>
+
 <div class="eskimo-page-title">
     <h1><span>{{ $category->title }}</span></h1>
-    <p class="eskimo-page-subtitle">{{ $category->title }} videos collection</p>
+    <p class="eskimo-page-subtitle">{{ $category->content ?: ($category->title . ' video collection and stories') }}</p>
 </div>
-
-@if($category->content)
-<div class="mb-4">
-    <p>{{ $category->content }}</p>
-</div>
-@endif
 
 <!-- VIDEO GALLERY -->
 <div class="eskimo-masonry-grid eskimo-gallery">

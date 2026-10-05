@@ -35,11 +35,15 @@ class GalleryCategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'   => 'required|min:2|max:255',
-            'slug'    => 'required|string|max:255|unique:gallery_categories,slug',
-            'content' => 'nullable|string',
-            'image'   => 'nullable',
-            'status'  => 'nullable',
+            'title'            => 'required|min:2|max:255',
+            'slug'             => 'required|string|max:255|unique:gallery_categories,slug',
+            'content'          => 'nullable|string',
+            'image'            => 'nullable',
+            'status'           => 'nullable',
+            'meta_title'       => 'nullable|string|max:100',
+            'meta_description' => 'nullable|string|max:255',
+            'meta_keywords'    => 'nullable|string|max:255',
+            'canonical_url'    => 'nullable|url|max:255',
         ]);
 
         $data['status'] = $request->has('status') ? 1 : 0;
@@ -79,11 +83,15 @@ class GalleryCategoryController extends Controller
     public function update(Request $request, GalleryCategory $category)
     {
         $data = $request->validate([
-            'title'   => 'required|min:2|max:255',
-            'slug'    => ['required', 'string', 'max:255', Rule::unique('gallery_categories', 'slug')->ignore($category->id)],
-            'content' => 'nullable|string',
-            'image'   => 'nullable',
-            'status'  => 'nullable',
+            'title'            => 'required|min:2|max:255',
+            'slug'             => ['required', 'string', 'max:255', Rule::unique('gallery_categories', 'slug')->ignore($category->id)],
+            'content'          => 'nullable|string',
+            'image'            => 'nullable',
+            'status'           => 'nullable',
+            'meta_title'       => 'nullable|string|max:100',
+            'meta_description' => 'nullable|string|max:255',
+            'meta_keywords'    => 'nullable|string|max:255',
+            'canonical_url'    => 'nullable|url|max:255',
         ]);
 
         $data['status'] = $request->has('status') ? 1 : 0;

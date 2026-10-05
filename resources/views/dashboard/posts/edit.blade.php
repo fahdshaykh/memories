@@ -134,10 +134,8 @@
                         
                     </div>
                     
-                    {{-- <div class="form-group mb-2">
-                        <label>More Content</label>
-                        <textarea class="summernote" name="more_content">{{ $post->more_content }}</textarea>
-                    </div> --}}
+                    <!-- SEO & Google Ranking Suite -->
+                    @include('dashboard.partials.seo_fields', ['model' => $post])
 
                 </div>
                 <div class="card-footer text-right">

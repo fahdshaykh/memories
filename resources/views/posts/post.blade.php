@@ -1,27 +1,126 @@
 @extends('layouts.app')
 
-@section('title', "$post->title | Wisherpro")
+@section('title', $post->seo_title)
+@section('meta_description', $post->seo_description)
+@section('meta_keywords', $post->seo_keywords)
+@section('canonical_url', $post->canonical_url ?: route('welcome.show', $post->slug))
+@section('og_type', 'article')
+@section('og_image', $post->image ? asset('storage/' . $post->image) : asset('default.png'))
 
+@section('og_article_tags')
+<meta property="article:published_time" content="{{ $post->created_at ? $post->created_at->toIso8601String() : now()->toIso8601String() }}">
+<meta property="article:modified_time" content="{{ $post->updated_at ? $post->updated_at->toIso8601String() : now()->toIso8601String() }}">
+@if($post->category)
+<meta property="article:section" content="{{ $post->category->title }}">
+@endif
+@foreach($post->tags as $t)
+<meta property="article:tag" content="{{ $t->name }}">
+@endforeach
+@endsection
+
+@section('schema_json')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },
+        @if($post->category)
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ addslashes($post->category->title) }}",
+            "item": "{{ route('category.posts', $post->category->slug) }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ addslashes($post->title) }}",
+            "item": "{{ route('welcome.show', $post->slug) }}"
+        }
+        @else
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ addslashes($post->title) }}",
+            "item": "{{ route('welcome.show', $post->slug) }}"
+        }
+        @endif
+    ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ route('welcome.show', $post->slug) }}"
+    },
+    "headline": {{ json_encode($post->title) }},
+    "description": {{ json_encode($post->seo_description) }},
+    "image": [
+        "{{ $post->image ? asset('storage/' . $post->image) : asset('default.png') }}"
+    ],
+    "datePublished": "{{ $post->created_at ? $post->created_at->toIso8601String() : now()->toIso8601String() }}",
+    "dateModified": "{{ $post->updated_at ? $post->updated_at->toIso8601String() : now()->toIso8601String() }}",
+    "author": {
+        "@type": "Organization",
+        "name": "Wisherpro Editorial",
+        "url": "{{ url('/') }}"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Wisherpro",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "{{ asset('default.png') }}"
+        }
+    },
+    "wordCount": {{ $post->word_count }},
+    "timeRequired": "PT{{ $post->reading_time }}M",
+    "keywords": {{ json_encode($post->seo_keywords) }}
+}
+</script>
+@endsection
 
 @section('content')
 
 <div class="clearfix"></div>
+
+<!-- BREADCRUMBS -->
+<nav aria-label="breadcrumb" class="mb-3" style="padding-top: 10px;">
+    <ol class="breadcrumb bg-transparent p-0 m-0" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+        <li class="breadcrumb-item"><a href="{{ url('/') }}" style="color: #64748b; text-decoration: none;">Home</a></li>
+        @if($post->category)
+        <li class="breadcrumb-item"><a href="{{ route('category.posts', $post->category->slug) }}" style="color: #64748b; text-decoration: none;">{{ $post->category->title }}</a></li>
+        @endif
+        <li class="breadcrumb-item active text-truncate" aria-current="page" style="color: #0f172a; max-width: 320px;">{{ $post->title }}</li>
+    </ol>
+</nav>
+
 <!-- PAGE TITLE -->
 <div class="eskimo-page-title">
     <h1><span> {{ $post->title }} </span></h1>
-    <div class="eskimo-page-title-meta">
-        {{-- <div class="eskimo-author-meta">
-            By <a class="author-meta" href="author.html">Egemenerd</a>
-        </div> --}}
+    <div class="eskimo-page-title-meta" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+        @if($post->category)
         <div class="eskimo-cat-meta">
             In <a href="{{ route('category.posts', $post->category->slug) }}">{{ $post->category->title }}</a>
         </div>
-        <div class="">{{ $post->created_at->diffForHumans(); }}</div>
+        @endif
+        <div class="eskimo-date-meta"><i class="fa fa-calendar-o mr-1"></i> {{ $post->created_at ? $post->created_at->format('M d, Y') : '' }}</div>
+        <div class="eskimo-reading-time text-muted" style="font-size: 12px; font-weight: 600;"><i class="fa fa-clock-o mr-1"></i> {{ $post->reading_time }} min read</div>
     </div>
 </div>
 <!-- FEATURED IMAGE -->
 <div class="eskimo-featured-img">
-    <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('default.png') }}" alt="{{ $post->slug }}" />
+    <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('default.png') }}" alt="{{ $post->title }}" fetchpriority="high" decoding="async" />
 </div>
 <!-- POST CONTENT -->
 <div class="eskimo-page-content">

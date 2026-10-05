@@ -98,6 +98,9 @@
                                 <span class="custom-switch-description">Active (Visible on Website)</span>
                             </label>
                         </div>
+
+                        <!-- SEO & Google Ranking Suite -->
+                        @include('dashboard.partials.seo_fields', ['model' => null, 'urlPrefix' => url('/category') . '/'])
                     </div>
 
                     <div class="card-footer text-right">

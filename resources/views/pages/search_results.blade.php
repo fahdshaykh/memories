@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', ($searchTerm ? 'Search: ' . $searchTerm : 'Search Content') . ' | Wisherpro')
+@section('meta_robots', 'noindex, follow')
+@section('canonical_url', route('search.posts', ['search' => $searchTerm, 'type' => $type]))
 
 @section('content')
 <div class="clearfix"></div>

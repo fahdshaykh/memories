@@ -14,6 +14,7 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SeoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,11 @@ use App\Http\Controllers\ContactController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// SEO & Crawling Routes
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('seo.sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('seo.robots');
+Route::get('/feed', [SeoController::class, 'feed'])->name('seo.feed');
 
 Route::get('/', [WelcomeController::class, 'welcome'])->name('welcome');
 Route::get('/search', [WelcomeController::class, 'search'])->name('search.posts');

@@ -1,6 +1,42 @@
 @extends('layouts.app')
 
-@section('title','Gallery Categories - Wisherpro')
+@section('title', 'Photo Galleries & Albums | Wisherpro')
+@section('meta_description', 'Explore curated photo galleries and visual albums on Wisherpro. Discover photography covering inspiring moments, nature, life events, and art.')
+@section('meta_keywords', 'photo gallery, image albums, photography, visual memories, life albums, wisherpro')
+@section('canonical_url', route('categories.user'))
+@section('og_type', 'website')
+
+@section('schema_json')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Photo Galleries & Albums",
+    "description": "Explore curated photo galleries and visual albums on Wisherpro.",
+    "url": "{{ route('categories.user') }}"
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Galleries",
+            "item": "{{ route('categories.user') }}"
+        }
+    ]
+}
+</script>
+@endsection
 
 @section('content')
 

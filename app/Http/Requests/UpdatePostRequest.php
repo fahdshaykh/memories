@@ -31,11 +31,15 @@ class UpdatePostRequest extends FormRequest
                 'regex:/^[a-zA-Z0-9\-]+$/',
                 Rule::unique('posts', 'slug')->ignore($this->route('post')->id), // SIRF ID IGNORE
             ],
-            'content'     => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5048',
-            'tags'        => 'nullable|string',
-            'quote.*'     => 'nullable|string',
+            'content'          => 'required',
+            'category_id'      => 'required|exists:post_categories,id',
+            'image'            => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5048',
+            'tags'             => 'nullable|string',
+            'quote.*'          => 'nullable|string',
+            'meta_title'       => 'nullable|string|max:100',
+            'meta_description' => 'nullable|string|max:255',
+            'meta_keywords'    => 'nullable|string|max:255',
+            'canonical_url'    => 'nullable|url|max:255',
         ];
     }
 }

@@ -1,17 +1,75 @@
 @extends('layouts.app')
 
-@section('title', $category->title . ' Galleries | Wisherpro')
+@section('title', ($category->seo_title ?: $category->title . ' Photo Gallery & Memories') . ' | Wisherpro')
+@section('meta_description', $category->seo_description ?: ('Explore beautiful ' . $category->title . ' photo collections, memories, and high-definition photography on Wisherpro.'))
+@section('meta_keywords', $category->seo_keywords ?: ($category->title . ', ' . $category->title . ' gallery, photos, photo collection, picture gallery, wisherpro'))
+@section('canonical_url', $category->canonical_url ?: route('gallery.show', $category->slug))
+@section('og_type', 'website')
+@if($category->image)
+    @section('og_image', asset('storage/' . $category->image))
+@endif
+
+@section('schema_json')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "{{ addslashes($category->title) }} Photo Gallery",
+    "description": "{{ addslashes($category->seo_description ?: 'Explore beautiful ' . $category->title . ' photo collections and photography on Wisherpro.') }}",
+    "url": "{{ route('gallery.show', $category->slug) }}",
+    "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "{{ $category->image ? asset('storage/' . $category->image) : asset('default.png') }}"
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ url('/') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Galleries",
+            "item": "{{ route('categories.user') }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ addslashes($category->title) }}",
+            "item": "{{ route('gallery.show', $category->slug) }}"
+        }
+    ]
+}
+</script>
+@endsection
 
 @section('content')
 
 <div class="clearfix"></div>
-<div class="eskimo-page-title">
-    <h1><span>Galleries</span></h1>
-    <p class="eskimo-page-subtitle">You can see {{ $category->title }} galleries...</p>
-</div>
 
-<h2>{{ $category->title }}</h2>
-<p>{{ $category->content }}</p>
+<!-- BREADCRUMB NAVIGATION -->
+<nav aria-label="breadcrumb" class="mb-3" style="font-size: 0.85rem; margin-top: 15px;">
+    <ol class="breadcrumb" style="background: transparent; padding: 0; margin-bottom: 0; display: flex; flex-wrap: wrap; list-style: none;">
+        <li class="breadcrumb-item"><a href="{{ url('/') }}" style="color: #64748b; text-decoration: none;"><i class="fa fa-home"></i> Home</a></li>
+        <li style="margin: 0 8px; color: #cbd5e1;">/</li>
+        <li class="breadcrumb-item"><a href="{{ route('categories.user') }}" style="color: #64748b; text-decoration: none;">Galleries</a></li>
+        <li style="margin: 0 8px; color: #cbd5e1;">/</li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: #0f172a; font-weight: 600;">{{ $category->title }}</li>
+    </ol>
+</nav>
+
+<div class="eskimo-page-title">
+    <h1><span>{{ $category->title }}</span></h1>
+    <p class="eskimo-page-subtitle">{{ $category->content ?: 'Explore ' . $category->title . ' photo gallery and visual memories' }}</p>
+</div>
 
 <!-- IMAGE GALLERY -->
 <div class="eskimo-masonry-grid eskimo-gallery">
